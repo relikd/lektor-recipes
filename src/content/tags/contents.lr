@@ -1,0 +1,5 @@
+_model: tags
+---
+_slug: recipes/tags
+---
+_template: querylist.html

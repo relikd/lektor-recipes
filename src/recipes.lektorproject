@@ -1,0 +1,14 @@
+[project]
+name = recipe lekture
+url_style = relative
+
+[alternatives.en]
+name = English
+primary = yes
+url_prefix = /en/
+locale = en_US
+
+[alternatives.de]
+name = German
+url_prefix = /de/
+locale = de_DE

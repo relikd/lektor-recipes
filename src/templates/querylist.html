@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.datamodel.name }}{% endblock %}
+{% block body %}
+  <h1>{{ this.datamodel.name }}</h1>
+  <ul class="li-lg-space">
+    {%- for cluster in this.children %}
+    <li><a href="{{ cluster|url }}">{{ cluster.name }}</a></li>
+    {%- endfor %}
+  </ul>
+{% endblock %}

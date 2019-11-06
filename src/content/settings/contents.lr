@@ -1,0 +1,9 @@
+_model: settings
+---
+_hidden: yes
+---
+replace_frac: yes
+---
+replace_temp: yes
+---
+show_empty_tags: no

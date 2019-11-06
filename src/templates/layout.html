@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.75">
+<script type="text/javascript" src="{{ '/static/col2.js'|url }}"></script>
+<script type="text/javascript" src="{{ '/static/lozad.min.js'|url }}"></script>
+<link rel="stylesheet" href="{{ '/static/style.css'|url }}">
+<title>{% block title %}Welcome{% endblock %} · recipe lekture</title>
+<body>
+  <header>
+    <a id="logo" href="{{ site.get('/', alt=this.alt)|url }}">recipe lekture</a>
+    <nav>
+      <ul>
+        {%- set allRecipes = site.get('recipes', this.alt) %}
+        <li><a {% if this == allRecipes %}class="active"{% endif %} href="{{ allRecipes|url }}">{{ localize('title.all_recipes') }}</a></li>
+        {%- for navpage in site.query('/groupby', this.alt) %}
+        <li><a {% if this.is_child_of(navpage) %}class="active"{% endif %} href="{{ navpage|url }}">{{ navpage.name }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    <div class="tags small">
+      {%- set allowEmptyTags = site.get('settings', alt=this.alt)['show_empty_tags'] -%}
+      {%- for tag in site.query('/tags', this.alt) %}
+      {%- if allowEmptyTags or tag._id in availableTags -%}
+      <a {%
+      if this.is_child_of(tag) or (this.tags and tag._id in this.tags) -%}
+        class="active"
+      {%- endif %} href="{{ tag|url }}">{{ tag.name }}</a>
+      {%- endif -%}
+      {%- endfor %}
+    </div>
+  </header>
+  <div class="page">
+    {% block body %}{% endblock %}
+  </div>
+  <footer>{#--#}
+    <table width="100%">{#--#}
+      <td>Build with <a href="https://www.getlektor.com/">Lektor</a>, template by <a href="https://github.com/relikd/lektor-recipes">relikd</a>.</td>{#--#}
+      <td class="xlarge" width="1em">
+        {%- if this.alt == 'de' -%}
+        <a href="{{ '.'|url(alt='en') }}" title="zur englischen Seite wechseln">🇱🇷</a>
+        {%- else -%}
+        <a href="{{ '.'|url(alt='de') }}" title="switch to german page">🇩🇪</a>
+        {%- endif -%}
+      </td>{#--#}
+    </table>{#--#}
+  </footer>
+  <script type="text/javascript">const observer = lozad(); observer.observe();</script>
+</body>
