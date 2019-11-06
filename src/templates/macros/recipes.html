@@ -1,0 +1,21 @@
+{%- macro render_recipe_list(recipes, limit=0) -%}
+  <div class="tile-grid">
+  {%- for recipe in recipes -%}
+    {%- if limit == 0 or loop.index <= limit -%}
+    {%- set img = recipe.attachments.images|sort(attribute='record_label')|first -%}
+    <a href="{{ recipe|url }}">{#--#}
+      <div class="recipe-tile">
+        <div class="img-placeholder">
+        {%- if img -%}
+          <img class="lozad" width="200" height="150" data-src="{{ img.thumbnail(200, 150)|url }}" />
+        {%- else -%}
+          No Image
+        {%- endif -%}
+        </div>
+        <p>{{ recipe.name }}</p>
+      </div>{#--#}
+    </a>
+    {%- endif -%}
+  {%- endfor %}
+  </div>
+{%- endmacro -%}

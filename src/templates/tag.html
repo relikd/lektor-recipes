@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% from "macros/recipes.html" import render_recipe_list %}
+{% from "macros/pagination.html" import render_pagination_all %}
+{% block title %}{{ this.name }}{% endblock %}
+{% block body %}
+  <h1>Tag: {{ this.name }}</h1>
+  {{ render_recipe_list(this.pagination.items) }}
+  {{ render_pagination_all(this.pagination) }}
+{% endblock %}

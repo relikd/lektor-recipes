@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}{{ this.name }}{% endblock %}
+{% block body %}
+<article class="recipe">
+  <section id="img-carousel" class="v-scroll center">
+    {%- for img in this.attachments.images|sort(attribute='record_label') %}
+    <img src="{{ img|url }}" height="400px">
+    {%- endfor %}
+  </section>
+
+  {% if this.source -%}
+  <div id="source" class="small center">
+    <a href="{{ this.source }}">⤳ {{ this.source.host }}</a>
+  </div>
+  {% endif %}
+  <h1>{{ this.name }}</h1>
+  
+  <section id="metrics" class="small">
+    <div id="rating" class="xlarge">{{ this.rating|rating }}</div>
+    <div class="difficulty {{this.difficulty}}">
+      <div></div><div></div><div></div>
+      {%- if this.difficulty %}
+      <span>{{ localize('difficulty', this.difficulty) }}</span>
+      {%- else %}
+      <span class="small">{{ localize('difficulty._unset') }}</span>
+      {%- endif %}
+    </div>
+    <div>{{ localize('duration.label') }}: {{ this.time|duration if this.time else '—' }}</div>
+    <div>{{ localize('yield.label') }}: {{ this.yield if this.yield else '—' }}</div>
+  </section>
+
+  <section id="ingredients">
+    <h2>{{ localize('title.ingredients') }}:</h2>
+    <ul class="no-bullets li-lg-space">
+    {%- for ing in this|enumIngredients %}
+      {%- if ing['group'] %}
+      <li class="dark-red bold mrgTopMd">{{ ing['group'] }}</li>
+      {%- else %}
+      <li>
+        {%- if ing['value']   %}{{ ing['value']   }} {% endif -%}
+        {%- if ing['measure'] %}{{ ing['measure'] }} {% endif -%}
+        <span class="light-red">{{ ing['name'] }}</span>
+        {%- if ing['note'] -%}
+        <span class="small italic">{{ ', ' ~ ing['note'] }}</span>
+        {%- endif -%}
+      </li>
+      {%- endif %}
+    {%- endfor %}
+    </ul>
+  </section>
+
+  <section id="directions">
+    <h2>{{ localize('title.directions') }}:</h2>
+    {% if site.get('settings', alt=this.alt)['replace_temp'] -%}
+      {{ this.directions|string|replace('°C', '℃')|replace('°F', '℉')|markdown }}
+    {% else -%}
+      {{ this.directions }}
+    {% endif -%}
+  </section>
+
+  <div style="clear: both;"></div>
+</article>
+{% endblock %}
