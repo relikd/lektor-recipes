@@ -1,0 +1,3 @@
+[submodule "src/packages/force-update"]
+	path = src/packages/force-update
+	url = https://github.com/relikd/lektor-force-update-plugin

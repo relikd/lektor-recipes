@@ -8,10 +8,10 @@
     {%- set sortType = this.xdata + [''] -%}
   {%- endif -%}
 
-  {%- set all = site.query('/recipes', this.alt) | groupByAttribute(this.group_key) | groupSort(sortType, this.reverse_order) -%}
+  {%- set all = site.query('/recipes', this.alt) | groupByAttribute(this.group_key, this.alt) | groupSort(sortType, this.reverse_order) -%}
 
   {%- if this.group_key == 'time' -%}
-    {%- set all = all | groupMergeCluster(this.xdata, this.reverse_order) -%}
+    {%- set all = all | groupTimeCluster(this.xdata, this.reverse_order) -%}
   {%- endif -%}
 
   <h1>{{ this.name }}</h1>
@@ -22,9 +22,9 @@
     {%- elif not attrib -%}
       {{ this.null_fallback }}
     {%- elif this.group_key == 'time' -%}
-      {{ attrib | duration(this.xdata) }}
+      {{ attrib | durationCluster(this.xdata, this.alt) }}
     {%- elif this.group_key == 'difficulty' -%}
-      {{ localize('difficulty', attrib) }}
+      {{ localize(this.alt, 'difficulty', attrib) }}
     {%- else -%}
       {{ attrib }}
     {%- endif -%}</dt>

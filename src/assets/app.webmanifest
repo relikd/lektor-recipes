@@ -1,0 +1,14 @@
+{
+    "name": "42 recipes",
+    "display": "standalone",
+    "background_color" : "#EAE9E7",
+    "theme_color": "#DC3A59",
+    "scope": ".",
+    "icons": [{
+        "src": "img/icon-180.png",
+        "sizes": "180x180"
+    },{
+        "src": "img/icon-196.png",
+        "sizes": "196x196"
+    }]
+}
