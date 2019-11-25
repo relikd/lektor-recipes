@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="raw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#993300;}
+	.st1{fill:#FFD3C0;}
+</style>
+<circle id="back" cx="500" cy="500" r="500"/>
+<circle id="color" class="st0" cx="500" cy="500" r="400"/>
+<g id="RAW">
+	<polygon id="w" class="st1" points="787,350 771.2,500 742.7,500 747.4,455 677.9,455 682.7,500 654.1,500 638.4,350 578,350 
+		609.6,650 669.9,650 660.4,560 689,560 693.7,605 731.8,605 736.5,560 764.9,560 755.4,650 815.8,650 847.3,350 	"/>
+	<path id="a" class="st1" d="M566,560L566,560l-6.3-60l0,0l-9.5-90l0,0l-6.3-60l0,0l0,0h-60.3l0,0h-16.7l0,0h-60.3l0,0l0,0l-6.3,60
+		l0,0l-9.5,90l0,0l-6.3,60l0,0l-9.5,90h60.3l9.5-90h60.8l9.5,90h60.3L566,560z M451.2,500l9.5-90H490l9.5,90H451.2z"/>
+	<path id="r" class="st1" d="M169.9,350l-0.1,301.1L230,650v-90l0,0c62.5,0,60,0,60,45v45h60v-45c0-45,0-75-45-75c45,0,45-30,45-75
+		c0-105,0-105-120-105C212.5,350,169.9,350,169.9,350z M230,500c0-16,0-75.3,0-90c60,0,60,0,60,45S290,500,230,500z"/>
+</g>
+</svg>

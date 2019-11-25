@@ -1,31 +1,39 @@
 <!doctype html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.75">
-<script type="text/javascript" src="{{ '/static/col2.js'|url }}"></script>
-<script type="text/javascript" src="{{ '/static/lozad.min.js'|url }}"></script>
-<link rel="stylesheet" href="{{ '/static/style.css'|url }}">
-<title>{% block title %}Welcome{% endblock %} · recipe lekture</title>
-<body>
+{%- if ENABLE_APPCACHE %}
+<html manifest="{{ site.get('app.appcache', alt=this.alt)|url }}">
+{% endif -%}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.75">
+  <script type="text/javascript" src="{{ '/static/script.js'|url }}"></script>
+  <link rel="stylesheet" href="{{ '/static/style.css'|url }}">
+  <link rel="icon" sizes="32x32" href="{{ '/img/icon-32.png'|url }}">
+  <link rel="icon" sizes="196x196" href="{{ '/img/icon-196.png'|url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/img/icon-180.png'|url }}">
+  <link rel="manifest" href="{{ '/app.webmanifest'|asseturl }}">
+  <title>{% block title %}Welcome{% endblock %} · recipe lekture</title>
+</head>
+<body> {#- ontouchstart="" #}
   <header>
     <a id="logo" href="{{ site.get('/', alt=this.alt)|url }}">recipe lekture</a>
+    {%- if ENABLE_APPCACHE %}
+    <i id="cache-status" title="cache status"></i>
+    {%- endif %}
     <nav>
       <ul>
         {%- set allRecipes = site.get('recipes', this.alt) %}
-        <li><a {% if this == allRecipes %}class="active"{% endif %} href="{{ allRecipes|url }}">{{ localize('title.all_recipes') }}</a></li>
+        <li><a {% if this == allRecipes %}class="active"{% endif %} href="{{ allRecipes|url }}">{{ localize(this.alt, 'title.all_recipes') }}</a></li>
         {%- for navpage in site.query('/groupby', this.alt) %}
         <li><a {% if this.is_child_of(navpage) %}class="active"{% endif %} href="{{ navpage|url }}">{{ navpage.name }}</a></li>
         {%- endfor %}
       </ul>
     </nav>
     <div class="tags small">
-      {%- set allowEmptyTags = site.get('settings', alt=this.alt)['show_empty_tags'] -%}
       {%- for tag in site.query('/tags', this.alt) %}
-      {%- if allowEmptyTags or tag._id in availableTags -%}
       <a {%
       if this.is_child_of(tag) or (this.tags and tag._id in this.tags) -%}
         class="active"
       {%- endif %} href="{{ tag|url }}">{{ tag.name }}</a>
-      {%- endif -%}
       {%- endfor %}
     </div>
   </header>

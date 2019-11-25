@@ -2,37 +2,42 @@
 {% block title %}{{ this.name }}{% endblock %}
 {% block body %}
 <article class="recipe">
+  <!-- date added: {{ this.date }} -->
   <section id="img-carousel" class="v-scroll center">
     {%- for img in this.attachments.images|sort(attribute='record_label') %}
-    <img src="{{ img|url }}" height="400px">
+    <img class="lozad" data-src="{{ img|url }}" height="400">
     {%- endfor %}
   </section>
 
   {% if this.source -%}
   <div id="source" class="small center">
-    <a href="{{ this.source }}">⤳ {{ this.source.host }}</a>
+    {%- if this.source.host -%}
+      <a href="{{ this.source }}">⤳ {{ this.source.host }}</a>
+    {%- else -%}
+      ⤳ {{ this.source }}
+    {%- endif -%}
   </div>
   {% endif %}
   <h1>{{ this.name }}</h1>
-  
+
   <section id="metrics" class="small">
     <div id="rating" class="xlarge">{{ this.rating|rating }}</div>
     <div class="difficulty {{this.difficulty}}">
       <div></div><div></div><div></div>
       {%- if this.difficulty %}
-      <span>{{ localize('difficulty', this.difficulty) }}</span>
+      <span>{{ localize(this.alt, 'difficulty', this.difficulty) }}</span>
       {%- else %}
-      <span class="small">{{ localize('difficulty._unset') }}</span>
+      <span class="small">{{ localize(this.alt, 'difficulty._unset') }}</span>
       {%- endif %}
     </div>
-    <div>{{ localize('duration.label') }}: {{ this.time|duration if this.time else '—' }}</div>
-    <div>{{ localize('yield.label') }}: {{ this.yield if this.yield else '—' }}</div>
+    <div>{{ localize(this.alt, 'duration.label') }}: {{ this.time|duration(this.alt) if this.time else '—' }}</div>
+    <div>{{ localize(this.alt, 'yield.label') }}: {{ this.yield or '—' }}</div>
   </section>
 
   <section id="ingredients">
-    <h2>{{ localize('title.ingredients') }}:</h2>
+    <h2>{{ localize(this.alt, 'title.ingredients') }}:</h2>
     <ul class="no-bullets li-lg-space">
-    {%- for ing in this|enumIngredients %}
+    {%- for ing in this|enumIngredients(this.alt) %}
       {%- if ing['group'] %}
       <li class="dark-red bold mrgTopMd">{{ ing['group'] }}</li>
       {%- else %}
@@ -41,7 +46,7 @@
         {%- if ing['measure'] %}{{ ing['measure'] }} {% endif -%}
         <span class="light-red">{{ ing['name'] }}</span>
         {%- if ing['note'] -%}
-        <span class="small italic">{{ ', ' ~ ing['note'] }}</span>
+        <span class="small italic">{{ ', ' ~ ing['note'] | replaceAtRefURLs(label=localize(this.alt, 'ingredients.recipeLink')) }}</span>
         {%- endif -%}
       </li>
       {%- endif %}
@@ -50,9 +55,9 @@
   </section>
 
   <section id="directions">
-    <h2>{{ localize('title.directions') }}:</h2>
+    <h2>{{ localize(this.alt, 'title.directions') }}:</h2>
     {% if site.get('settings', alt=this.alt)['replace_temp'] -%}
-      {{ this.directions|string|replace('°C', '℃')|replace('°F', '℉')|markdown }}
+      {{ this.directions.html|replace('°C', '℃')|replace('°F', '℉') }}
     {% else -%}
       {{ this.directions }}
     {% endif -%}

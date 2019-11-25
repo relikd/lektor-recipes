@@ -1,0 +1,54 @@
+CACHE MANIFEST
+# Date build: {{ DATE_NOW }}
+
+{%- macro _print_(items) -%}
+{%- for item in items -%}
+  {{ item|replace('../', '', 1) }}
+{% endfor -%}
+{%- endmacro -%}
+
+{%- macro _add_(list, item) -%}
+{{- list.append(item|url) or pass -}}
+{%- endmacro -%}
+
+{%- set root = site.get('/', this.alt) -%}
+
+{%- set assetList = [] -%}
+{%- for asset in root.pad.asset_root.children recursive -%}
+  {%- if asset.__class__.__name__ != 'Directory' -%}
+    {{- _add_(assetList, asset) -}}
+  {%- endif -%}
+  {{- loop(asset.children) -}}
+{%- endfor -%}
+
+{%- set cacheList = [] -%}
+{{- _add_(cacheList, root) -}}
+{%- for x in root.children if x != this recursive -%}
+  {{- _add_(cacheList, x) -}}
+
+  {%- set pg = x.datamodel.pagination_config -%}
+  {%- if pg.enabled -%}
+    {%- for page in range(2, pg.count_pages(x) + 1) -%}
+      {{- _add_(cacheList, pg.get_record_for_page(x, page)) -}}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {% set img = x.attachments.images|sort(attribute='record_label')|first -%}
+  {%- if img -%}
+    {{- _add_(cacheList, img.thumbnail(200, 150, 'crop')) -}}
+  {%- endif -%}
+
+  {%- if x.datamodel.has_own_children -%}
+    {{- loop(x.children) -}}
+  {%- endif -%}
+{%- endfor -%}
+
+{#- Generate cache file index #}
+# static
+{{ _print_(assetList) -}}
+# index
+{{ _print_(cacheList) -}}
+
+{#- All other requests are forwarded #}
+NETWORK:
+*
