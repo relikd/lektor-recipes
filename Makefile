@@ -28,6 +28,13 @@ build:
 	(rm content/recipes; ln -s ../../data/distribution/ content/recipes) && \
 	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_APPCACHE
 
+deploy:
+	@echo
+	@echo 'Warning: This will not(!) build but sync all files in ./bin'
+	@( read -p "Continue? [y/N]: " sure && case "$$sure" in [yY]) true;; *) false;; esac )
+	@echo # --dry-run
+	rsync -rclzv --exclude=.lektor --exclude=.DS_Store --delete bin/ vps:/srv/http/recipe-lekture
+
 # Helper methods on all recipes
 
 find-links:
