@@ -5,6 +5,7 @@ help:
 	@echo 'make clean  - Removes all temporary server-build files (not ./bin)'
 	@echo 'make server - Start lektor server with live change updates'
 	@echo 'make build  - Build deployable website into ./bin'
+	@echo 'make deploy - Custom rsync command to sync ./bin to remote server'
 	@echo
 	@echo 'make find-links - Search for cross reference between recipes'
 	@echo
