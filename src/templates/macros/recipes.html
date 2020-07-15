@@ -2,7 +2,7 @@
   <div class="tile-grid">
   {%- for recipe in recipes -%}
     {%- if limit == 0 or loop.index <= limit -%}
-    {%- set img = recipe.attachments.images|sort(attribute='record_label')|first -%}
+    {%- set img = recipe.attachments.images.order_by('record_label').first() -%}
     <a href="{{ recipe|url }}">{#--#}
       <div class="recipe-tile">
         

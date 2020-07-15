@@ -73,7 +73,8 @@ def group_by_time_cluster(dic, arr=[30, 60, 120], reverse=False):
         except KeyError:
             groups[key] = set()
         groups[key].update(recipes)
-    return sorted(groups.items(), reverse=bool(reverse))
+    return sorted(groups.items(), reverse=bool(reverse),
+                  key=lambda x: x[0] if x[0] != '' else 999999999)
 
 
 class TimeDurationPlugin(Plugin):

@@ -2,6 +2,12 @@
   --cBg1: #FAF9F7; --cBg2: #EAE9E7; --cBg3: #9A9997;
   --cRed1: #DC3A59; --cRed2: #AA203A; --cRed3: #EE6A84;
 }
+@media (prefers-color-scheme: dark) {
+  :root { --cTxt: #DDD;
+    --cBg1: #191816; --cBg2: #292725; --cBg3: #373635;
+    --cRed1: #B31; --cRed2: #F64; --cRed3: #FB9;
+  }
+}
 
 .center { text-align: center }
 .small  { font-size: 0.8em }
@@ -69,7 +75,7 @@ footer table { margin: -10px 0 }
  */
 .tags { display: flex; flex-wrap: wrap; justify-content: center }
 .tags > * {
-  background: #FFF;
+  background: var(--cBg1);
   border: 1px solid var(--cRed1);
   border-radius: 0.3em;
   padding: 0.3em 0.5em;

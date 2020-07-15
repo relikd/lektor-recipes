@@ -23,11 +23,11 @@ Install
 
 1. Download [Lektor](https://www.getlektor.com/) and follow the instructions.
 
-2. Clone this repository and change to the `src` directory.
+2. Clone this repository and change to the root directory.
 
-3. Run `make server` to run a local server and preview the page.
+3. Run `make dev server` to run a local server and preview the page.
 
-4. For distribution run `make build` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
+4. For distribution run `make dist build` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
 
 
 ### Modify

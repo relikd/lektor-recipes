@@ -1,32 +1,51 @@
-PROJDIR := 'src'
+PROJDIR := src
 
 help:
 	@echo
-	@echo 'make clean  - Removes all temporary server-build files (not ./bin)'
-	@echo 'make server - Start lektor server with live change updates'
-	@echo 'make build  - Build deployable website into ./bin'
-	@echo 'make deploy - Custom rsync command to sync ./bin to remote server'
+	@echo '  dev     - Switch to development branch'
+	@echo '  dist    - Switch to distribution branch'
+	@echo '  clean   - Removes all temporary server-build files (not ./bin)'
+	@echo '  plugins - Clean and rebuild plugin cache'
+	@echo '  clean-all - Rebuild everything (not ./bin)'
 	@echo
-	@echo 'make find-links - Search for cross reference between recipes'
+	@echo '  server  - Start lektor server with live change updates'
+	@echo '  build   - Build deployable website into ./bin'
+	@echo '  deploy  - Custom rsync command to sync ./bin to remote server'
+	@echo
+	@echo
+	@echo '  find-links - Search for cross reference between recipes'
 	@echo
 
-# Project build & clean
+define switch_to
+	@echo Set source to $(1)
+	@rm $(PROJDIR)/content/recipes; ln -s $(1) $(PROJDIR)/content/recipes
+endef
+
+# Clean
+
+dev:
+	$(call switch_to, '../../data/development/')
+
+dist: 
+	$(call switch_to, '../../data/distribution/')
 
 clean:
-	@cd '$(PROJDIR)' && \
-	temp_path="$$(lektor project-info --output-path)" && \
-	if [[ -d "$$temp_path" ]]; then \
-		echo "rm -rf $$temp_path"; rm -rf "$$temp_path"; \
-	fi
+	@echo 'Cleaning output'
+	@cd '$(PROJDIR)' && lektor clean --yes -v
+
+plugins:
+	@echo 'Cleaning plugins'
+	@cd '$(PROJDIR)' && lektor plugins flush-cache && lektor plugins list
+
+clean-all: clean plugins
+
+# Build
 
 server:
-	@cd '$(PROJDIR)' && \
-	(rm content/recipes; ln -s ../../data/development/ content/recipes) && \
-	lektor server
+	@cd '$(PROJDIR)' && lektor server
 
 build:
 	@cd '$(PROJDIR)' && \
-	(rm content/recipes; ln -s ../../data/distribution/ content/recipes) && \
 	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_APPCACHE
 
 deploy:
