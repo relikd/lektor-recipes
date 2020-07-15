@@ -33,7 +33,7 @@ CACHE MANIFEST
     {%- endfor -%}
   {%- endif -%}
 
-  {% set img = x.attachments.images|sort(attribute='record_label')|first -%}
+  {% set img = x.attachments.images.order_by('record_label').first() -%}
   {%- if img -%}
     {{- _add_(cacheList, img.thumbnail(200, 150, 'crop')) -}}
   {%- endif -%}

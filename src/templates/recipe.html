@@ -4,7 +4,7 @@
 <article class="recipe">
   <!-- date added: {{ this.date }} -->
   <section id="img-carousel" class="v-scroll center">
-    {%- for img in this.attachments.images|sort(attribute='record_label') %}
+    {%- for img in this.attachments.images.order_by('record_label') %}
     <img class="lozad" data-src="{{ img|url }}" height="400">
     {%- endfor %}
   </section>
