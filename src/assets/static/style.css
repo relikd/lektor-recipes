@@ -32,7 +32,9 @@ i.icon:before {
 i.icon.gf:before {background-image: url('../img/icon-glutenfree.svg')}
 i.icon.raw:before {background-image: url('../img/icon-raw.svg')}
 i.icon.veg:before {background-image: url('../img/icon-vegan.svg')}
-i.icon.yield:before {background-image: url('../img/icon-yield.svg.svg')}
+i.icon.yield:before {background-image: url('../img/icon-yield.svg')}
+i.icon.pdf:before {background-image: url('/img/icon-pdf.svg')}
+.h1em { height: 1.5ex }
 
 /*
  * General
