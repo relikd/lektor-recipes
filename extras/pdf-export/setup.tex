@@ -1,0 +1,174 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry} % margin width
+\usepackage{graphicx} % includegraphics
+\usepackage{xcolor} % colors
+\usepackage{sidenotes} % margin figure, etc.
+\usepackage{enumitem} % setlist[description]
+\usepackage{titleps} % footer page number
+\usepackage{tocloft} % \cftbeforesecskip
+\usepackage{ragged2e} % \RaggedRight
+\usepackage{fontspec} % \setmainfont, \setsansfont, \setmonofont
+
+\definecolor{red2}{HTML}{AA203A}
+\definecolor{red3}{HTML}{EE6A84}
+\usepackage{xurl}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\renewcommand{\UrlFont}{\normalfont}
+
+%% Use this if the font is _not_ installed on the system
+%% but it requires the download of the additional fonts package
+%% \setmonofont[Path=fonts/]{FiraSans-Light}
+\setmainfont[
+  Path           = fonts/,
+  BoldFont       = Crimson-Bold,
+  ItalicFont     = Crimson-Italic,
+  BoldItalicFont = Crimson-BoldItalic
+]{Crimson-Roman}
+\setsansfont[
+  Path           = fonts/,
+  Scale          = 0.95,
+  BoldFont       = FiraSans-Medium,
+  ItalicFont     = FiraSans-LightItalic,
+  BoldItalicFont = FiraSans-MediumItalic
+]{FiraSans-Regular}
+
+%% Use this if the font is installed on the system
+%% this does not require additional fonts package
+% \setmainfont[
+%   BoldFont       = {Fira Sans Medium},
+%   ItalicFont     = {Fira Sans Light Italic},
+%   BoldItalicFont = {Fira Sans Medium Italic}
+% ]{Fira Sans Regular}
+% \setmainfont[
+%   BoldFont       = {Crimson Bold},
+%   ItalicFont     = {Crimson Italic},
+%   BoldItalicFont = {Crimson Bold Italic}
+% ]{Crimson Roman}
+
+% Defines & Geometry
+\def\marginwidth{60mm}
+\def\marginsep{8.2mm}
+\def\marginwoverflow{67mm} % -1.2mm for makebox
+% space before \paragraph
+\setlength{\parindent}{0pt}
+% space between paragraphs
+\setlength{\parskip}{0.4\baselineskip}
+\geometry{
+  head=13.6pt,
+  top=2cm,
+  bottom=2cm,
+  inner=2cm,
+  outer=2cm,
+  marginparsep=\marginsep,
+  marginparwidth=\marginwidth,
+  includemp,
+  % showframe
+}
+% \renewcommand{\footnotesep}{2.5ex}
+\renewcommand{\footnoterule}{
+  \kern -2pt
+  \hrule width \textwidth height .2pt
+  \kern 1.8pt}
+% spacing before & after
+\makeatletter
+% footer
+\renewcommand\@makefntext[1]{\noindent\makebox[0.5em][l]{\@makefnmark}#1}
+% subsubsection
+\renewcommand{\subsubsection}{%
+  \@startsection{subsubsection}{3}%
+  {\z@}{-2ex \@plus -1ex \@minus -1ex}{.2ex \@plus 1ex \@minus .2ex}%
+  {\normalfont\large\bfseries}%
+}
+% paragraph
+\renewcommand{\paragraph}{%
+  \@startsection{paragraph}{4}%
+  {\z@}{1.5ex \@plus 1ex \@minus .2ex}{-.75em}%
+  {\normalfont\normalsize\bfseries}%
+}
+\makeatother
+% adjust description environment
+\setlist[description,enumerate,itemize]{%
+  topsep=0.7\baselineskip,
+  itemsep=0pt,
+  % itemindent=-2em,
+  % listparindent=-2em,
+  % leftmargin=0em,
+  font={\sffamily}
+}
+\setlist[enumerate,itemize]{leftmargin=1em,topsep=0\baselineskip,parsep=0pt}
+\widowpenalty10000
+\clubpenalty10000
+% disable section numbering
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+% \titleformat*{\section}{\LARGE\bfseries} # titlesec
+\setlength{\cftbeforesecskip}{0.2em} % spacing in TOC
+
+% Footer page numbering
+\renewpagestyle{plain}{%
+\setfoot[{\makebox[-\marginwoverflow][r]{\thepage}}][][]{}{}{{\makebox[-\marginwoverflow][l]{\thepage}}}
+}
+\pagestyle{plain}
+
+% \graphicspath{{../src/content/}}
+
+\newcommand{\makefrontmatter}{
+  \begin{titlepage}
+    \newgeometry{top=2.5cm,bottom=2.5cm,left=4cm,right=4cm}
+    \centering
+    \vspace*{.06\textheight}
+    \includegraphics[width=54mm]{misc/logo.pdf}\par
+    \vspace*{.06\textheight}
+    {\huge\sf recipe lekture}
+    \vfill
+    \today
+  \end{titlepage}
+
+  % \thispagestyle{empty}
+  \pagenumbering{roman}
+  \tableofcontents
+  \clearpage
+  \pagenumbering{arabic}
+  \setcounter{page}{1}
+}
+
+% Custom commands
+\newcommand{\meta}[2]{%
+  \vspace{-0.75em}%
+  ~\includegraphics[height=2ex]{misc/icon-time}\enspace\ifx\relax#1\relax—\else#1\fi%
+  \quad%
+  \includegraphics[height=2ex]{misc/icon-yield}\enspace\ifx\relax#2\relax—\else#2\fi%
+  \vspace{1em}%
+}
+\newcommand{\footer}[2]{%
+  \ifx\relax#1\relax\else{%
+    \enlargethispage{5.75ex}
+    \let\thefootnote\relax\footnotetext{%
+      \hspace{-.6em} Source: %
+      \ifx\relax#2\relax#1\else\href{#1}{#2}\fi%
+    }\fi%
+  }
+}
+
+\newcommand{\newrecipe}[2]{\clearpage\section{#2}\label{#1}}
+\newcommand{\ingGroup}[1]{\vspace{.2ex}\item{\bfseries\color{red2}\hspace{-1em} #1}}
+\newcommand{\ingName}[1]{{\color{red3}#1}}
+\newcommand{\ingDetail}[1]{\emph{\footnotesize,#1}}
+\newcommand{\pagelink}[1]{\tRecipe \tPagePrefix\,{\color{red2}\pageref{#1}}}
+\newcommand{\recipelink}[2]{#2 (\tPagePrefix\,\pageref{#1})}
+\newcommand{\external}[2]{#2\footnote{\href{#1}{#1}}}
+% \newcommand{\external}[2]{#2\footnote{\url{#1}}}
+
+\newenvironment{ingredients}[1]{
+  \begin{marginfigure}
+  \small
+  \ifx\relax#1\relax\else\includegraphics[width=\marginwidth]{#1}\fi
+  % \subsection*{\sffamily\tIngredients:} 
+  \begin{description}
+  \RaggedRight\sffamily
+}{
+  \end{description}
+  \end{marginfigure}
+}

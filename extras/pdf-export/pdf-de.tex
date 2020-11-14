@@ -1,0 +1,14 @@
+\documentclass[a4paper,12pt,twoside]{article}
+\usepackage[ngerman]{babel}
+\include{setup}
+\include{setup-builddir} % load \def\builddir{}
+
+\def\tIngredients{Zutaten}
+\def\tRecipe{Rezept}
+\def\tPagePrefix{S.}
+
+\begin{document}
+\makefrontmatter
+\graphicspath{{\builddir/de/}}
+\include{\builddir/de/pdf-export}
+\end{document}

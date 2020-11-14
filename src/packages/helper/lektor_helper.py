@@ -4,9 +4,21 @@ from lektor.databags import Databags
 from markupsafe import Markup
 from datetime import datetime
 import unicodedata
+import lektor_html_to_tex as tex
 
 # -------
 # Sorting
+
+
+def sorted_images(obj, attr='record_label'):
+    return sorted(obj.attachments.images, key=lambda x: getattr(x, attr))
+
+
+def title_image(self, attr='record_label', small=False):
+    img = (sorted_images(self, attr) or [None])[0]
+    if img and small:
+        img = img.thumbnail(200, 150, mode='crop')
+    return img
 
 
 def sortKeyInt(x):
@@ -40,17 +52,24 @@ def noUmlaut(text):
 
 
 def replaceFractions(txt):
-    res = ''
+    res = ' '
+    for c in u'-–—':
+        if c in txt:
+            txt = txt.replace(c, ' – ')
     for x in txt.split():
+        if x == '':
+            continue
         try:
             i = ['1/2', '1/3', '2/3', '1/4', '3/4', '1/8'].index(x)
             res += [u'½', u'⅓', u'⅔', u'¼', u'¾', u'⅛'][i]
         except ValueError:
-            if x in u'-–—':
-                res += u' - '
+            if x == '–':
+                res += '–'
+            elif res[-1:] == '–':
+                res += x
             else:
                 res += ' ' + x
-    return res.lstrip()
+    return res.lstrip(' ')
 
 
 def numFillWithText(num, fill=u'★', empty=u'☆', total=5):
@@ -186,12 +205,12 @@ class HelperPlugin(Plugin):
                 partA, partB = partA.split('.', 1)
             return self.translations[alt][partA][partB]
 
-        def ingredientsForRecipe(recipe, alt='en'):
+        def ingredientsForRecipe(recipe, alt='en', mode='raw'):
             meaList = self.settings[alt]['measures']
             repFrac = self.settings[alt]['replFrac']
 
             for line in recipe['ingredients']:
-                line = line.strip()
+                line = tex.raw_text_to_tex(line).strip()
                 if not line:
                     continue
                 elif line.endswith(':'):
@@ -210,6 +229,8 @@ class HelperPlugin(Plugin):
             # groups[undefinedKey].update(groups.pop('_undefined'))
             return groups.items()
 
+        self.env.jinja_env.filters['sorted_images'] = sorted_images
+        self.env.jinja_env.filters['title_image'] = title_image
         self.env.jinja_env.filters['rating'] = numFillWithText
         self.env.jinja_env.filters['replaceFractions'] = replaceFractions
         self.env.jinja_env.filters['enumIngredients'] = ingredientsForRecipe

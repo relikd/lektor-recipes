@@ -1,0 +1,31 @@
+{%- set recipe_label = localize(this.alt, 'ingredients.recipeLink') %}
+
+{%- for recipe in site.get('/recipes', this.alt).children %}
+\newrecipe{ {{- recipe._slug }}}{ {{- recipe.name | raw_text_to_tex }}}
+\meta{ {{- recipe.time|duration(this.alt) if recipe.time else '' }}}{ {{- recipe.yield or '' }}}
+\footer{ {{- recipe.source | string | raw_text_to_tex or '' }}}{ {{- recipe.source.host | raw_text_to_tex if recipe.source.host else '' }}}
+  {%- set img = recipe | title_image(small=True) %}
+
+\begin{ingredients}{ {%- if img %}{{ img|url }}{% else %}{% endif %}}
+  {%- for ing in recipe|enumIngredients(this.alt, mode='tex') %}
+    {%- if ing['group'] %}
+\ingGroup{ {{- ing['group'] | raw_text_to_tex }}}
+    {%- else %}
+\item
+    {%- if ing['value'] or ing['measure'] -%}
+      [{%- if ing['value'] %}{{ ing['value'] }}{% endif -%}
+      {%- if ing['measure'] %}~{{ ing['measure'] }}{% endif -%}]
+    {%- endif %} \ingName{ {{- ing['name'] -}}}
+    {%- if ing['note'] %}\ingDetail{
+      {%- for prt in ing['note'].split() -%}
+        {%- if prt.startswith('@../') %} \pagelink{ {{- prt[4:-1] -}} }
+        {%- else %} {{ prt -}}
+        {%- endif -%}
+      {%- endfor -%}}
+    {%- endif -%}
+    {%- endif -%}
+  {%- endfor %}
+\end{ingredients}
+
+{{ recipe.directions.html | html_to_tex }}
+{%- endfor %}
