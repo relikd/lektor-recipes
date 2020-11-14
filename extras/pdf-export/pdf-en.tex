@@ -1,0 +1,14 @@
+\documentclass[letter,12pt,twoside]{article}
+\usepackage[english]{babel}
+\include{setup}
+\include{setup-builddir} % load \def\builddir{}
+
+\def\tIngredients{Ingredients}
+\def\tRecipe{recipe}
+\def\tPagePrefix{p.}
+
+\begin{document}
+\makefrontmatter
+\graphicspath{{\builddir/en/}}
+\include{\builddir/en/pdf-export}
+\end{document}

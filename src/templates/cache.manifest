@@ -2,8 +2,8 @@ CACHE MANIFEST
 # Date build: {{ DATE_NOW }}
 
 {%- macro _print_(items) -%}
-{%- for item in items -%}
-  {{ item|replace('../', '', 1) }}
+{%- for item in items if not item.endswith('tex') -%}
+  {{ item }}
 {% endfor -%}
 {%- endmacro -%}
 
@@ -33,10 +33,10 @@ CACHE MANIFEST
     {%- endfor -%}
   {%- endif -%}
 
-  {% set img = x.attachments.images.order_by('record_label').first() -%}
+  {#{% set img = x | title_image(small=True) -%}
   {%- if img -%}
-    {{- _add_(cacheList, img.thumbnail(200, 150, 'crop')) -}}
-  {%- endif -%}
+    {{- _add_(cacheList, img) -}}
+  {%- endif -%}#}
 
   {%- if x.datamodel.has_own_children -%}
     {{- loop(x.children) -}}

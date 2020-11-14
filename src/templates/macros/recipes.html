@@ -2,7 +2,7 @@
   <div class="tile-grid">
   {%- for recipe in recipes -%}
     {%- if limit == 0 or loop.index <= limit -%}
-    {%- set img = recipe.attachments.images.order_by('record_label').first() -%}
+    {%- set img = recipe | title_image(small=True) -%}
     <a href="{{ recipe|url }}">{#--#}
       <div class="recipe-tile">
         
@@ -17,7 +17,7 @@
 
         {#-   show image or placeholder text   #}
         {% if img -%}
-        <img class="lozad" data-src="{{ img.thumbnail(200, 150, 'crop')|url }}">
+        <img class="lozad" data-src="{{ img|url }}">
         {%- else -%}
         <div class="placeholder">No Image</div>
         {%- endif -%}
