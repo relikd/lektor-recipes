@@ -45,7 +45,7 @@ clean-all: clean plugins
 server:
 	@cd '$(PROJDIR)' && lektor server # -f ENABLE_PDF_EXPORT
 
-build:
+build: dist
 	@cd '$(PROJDIR)' && \
 	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_APPCACHE -f ENABLE_PDF_EXPORT
 	@echo

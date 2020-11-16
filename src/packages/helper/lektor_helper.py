@@ -72,7 +72,7 @@ def replaceFractions(txt):
     return res.lstrip(' ')
 
 
-def numFillWithText(num, fill=u'★', empty=u'☆', total=5):
+def numFillWithText(num, fill=u'★', empty=u'☆', total=3):
     num = int(num) if num else 0
     return fill * num + empty * (total - num)
 
