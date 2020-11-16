@@ -210,7 +210,9 @@ class HelperPlugin(Plugin):
             repFrac = self.settings[alt]['replFrac']
 
             for line in recipe['ingredients']:
-                line = tex.raw_text_to_tex(line).strip()
+                line = line.strip()
+                if mode == 'tex':
+                    line = tex.raw_text_to_tex(line)
                 if not line:
                     continue
                 elif line.endswith(':'):

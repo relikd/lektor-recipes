@@ -1,7 +1,7 @@
 \documentclass[a4paper,12pt,twoside]{article}
 \usepackage[ngerman]{babel}
 \include{setup}
-\include{setup-builddir} % load \def\builddir{}
+\include{dyn-builddir} % load \def\builddir{}
 
 \def\tIngredients{Zutaten}
 \def\tRecipe{Rezept}
@@ -9,6 +9,5 @@
 
 \begin{document}
 \makefrontmatter
-\graphicspath{{\builddir/de/}}
-\include{\builddir/de/pdf-export}
+\include{dyn-recipes-de}
 \end{document}

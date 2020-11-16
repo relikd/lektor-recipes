@@ -50,13 +50,12 @@ s?<it>\([^<]*\)</it>?{\\it \1}?g
 s?<em>\([^<]*\)</em>?{\\it \1}?g
 s?<b>\([^<]*\)</b>?{\\bf \1}?g
 s?<strong>\([^<]*\)</strong>?{\\bf \1}?g
-# old unused, because lektor generated internally other urls then output
-#     s?<a href="\.\.[^"]*/\([^"/][^"/]*\)/*">[^<]*</a>?\\recipelink{\1}?g
 # recipe specific
-s?<a href="recipes/\([^"/]*\)/*">\([^<]*\)</a>?\\recipelink{\1}{\2}?g
+s?<a href="../\([^"/]*\)/*">\([^<]*\)</a>?\\recipelink{\1}{\2}?g
 # Get rid of Anchors
 s?<a href="\(http[^"]*\)">\([^<]*\)</a>?\\external{\1}{\2}?g
 s?<a[^>]*>??g
 s?</a>??g
-# after href replace
+# quotes (replace after href)
+s?\([[:space:]]\)"\([^[:space:]]\)?\1``\2?g
 s?"?''?g
