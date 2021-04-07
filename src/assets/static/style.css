@@ -65,6 +65,8 @@ nav ul { padding: unset }
 nav ul li { display: inline-block; margin: 0.1em 0.5em }
 nav ul li a.active { text-decoration: overline }
 footer table { margin: -10px 0 }
+footer .buttons { width: 3em; }
+footer .buttons a { margin-left: .5em; }
 
 @media screen and (max-width: 485px) { body { font-size: 1.4em } }
 @media print {
