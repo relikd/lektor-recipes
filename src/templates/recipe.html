@@ -6,7 +6,7 @@
   <section id="img-carousel" class="v-scroll center">
     {%- for img in this | sorted_images %}
     <img class="lozad" data-src="{{ img|url }}" height="400">
-    {%- endfor %}
+    {%- endfor -%}
   </section>
 
   {% if this.source -%}
