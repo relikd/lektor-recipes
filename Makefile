@@ -1,6 +1,8 @@
 PROJDIR := src
 TEXER := lualatex
 
+.PHONY: help dev dist clean plugins clean-all server build deploy pdf-clean pdf find-links
+
 help:
 	@echo
 	@echo '  dev     - Switch to development branch'
@@ -59,12 +61,15 @@ deploy:
 	@echo # --dry-run
 	rsync -rclzv --exclude=.lektor --exclude=.DS_Store --delete bin/ vps:/srv/http/recipe-lekture
 
-pdf:
+pdf-clean:
+	@rm -f extras/pdf-export/*.{aux,log,out,toc}
+
+pdf-build:
 	@echo
 	@echo 'Generating PDF from tex source ...'
 	@echo 'Check if $(TEXER) exists'
 	@which $(TEXER)
-	@cd extras/pdf-export/ && \
+	@cd 'extras/pdf-export/' && \
 	SECONDS=0; \
 	for i in 1 2; do \
 		for alt in de en; do \
@@ -74,8 +79,9 @@ pdf:
 		done; \
 	done; \
 	echo "done. finished after $${SECONDS}s."
-	rm -rf extras/pdf-export/*.{aux,log,out,toc}
 	mv extras/pdf-export/pdf-*.pdf bin/static
+
+pdf: pdf-clean pdf-build pdf-clean
 
 # Helper methods on all recipes
 
