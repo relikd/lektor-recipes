@@ -91,3 +91,18 @@ find-links:
 	find */*.lr -exec grep --color=auto -i ".\.\./[^ ]*" -o {} + \
 	|| echo 'nothing found.'
 	@echo
+
+find-yield:
+	@echo
+	@cd '$(PROJDIR)/content/recipes' && \
+	find */*.lr -exec grep "^yield: .*" -o {} \; \
+	| cut -d' ' -f 2- | tr -d '[0-9-–.]' | sort -u \
+	|| echo 'nothing found.'
+	@echo
+
+find-time:
+	@cd '$(PROJDIR)/content/recipes' && \
+	find */*.lr -exec grep "^time: .*" -o {} \; \
+	| cut -d' ' -f 2- | sort -n -u \
+	|| echo 'nothing found.'
+
