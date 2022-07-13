@@ -1,5 +1,4 @@
 (function(){// main entry
-	handleAppCache();
 	updateViewport();
 })();
 function updateViewport() {// show at least 2 columns on mobile devices
@@ -10,22 +9,6 @@ function updateViewport() {// show at least 2 columns on mobile devices
 		x.setAttribute("name", "viewport");
 		x.setAttribute("content", "width=485");
 		document.head.appendChild(x);
-	}
-}
-function handleAppCache() {// update cache status icon
-	var cache = window.applicationCache;
-	if (cache) {
-		cache.addEventListener('updateready', update);
-		cache.addEventListener('cached', ready); // initial
-		cache.addEventListener('noupdate', ready); // consecutive
-		cache.addEventListener('downloading', busy);
-		cache.addEventListener('obsolete', failed);
-		if(cache.status===cache.UPDATEREADY){update()}
-		if(cache.status===cache.IDLE){window.onload=(event)=>{ready()};}
-		function update(){ready(); cache.swapCache(); window.location.reload()}
-		function busy(){document.getElementById('cache-status').style='background:darkorange'}
-		function ready(){document.getElementById('cache-status').style='background:forestgreen'}
-		function failed(){document.getElementById('cache-status').style='background:red'}
 	}
 }
 /*! lozad.js - v1.9.0 - 2019-02-09

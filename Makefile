@@ -49,7 +49,7 @@ server:
 
 build: dist
 	@cd '$(PROJDIR)' && \
-	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_PDF_EXPORT # -f ENABLE_APPCACHE
+	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_PDF_EXPORT
 	@echo
 	@echo 'Checking dead links ...'
 	@python3 extras/find-dead-links.py

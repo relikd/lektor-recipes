@@ -166,15 +166,8 @@ class HelperPlugin(Plugin):
     # Event hooks
     # -----------
 
-    def processCLI(self, extra_flags):
-        useCache = bool(extra_flags.get('ENABLE_APPCACHE'))
-        plugin = get_plugin('force-update', self.env)
-        if plugin.enabled and not useCache:
-            plugin.enabled = False
-        print('AppCache: ' + ('ENABLED' if useCache else 'DISABLED'))
-        self.env.jinja_env.globals['ENABLE_APPCACHE'] = useCache
-
-    def processSettings(self):
+    def on_before_build_all(self, builder, **extra):
+        # update project settings once per build
         bag = Databags(self.env)
         pad = self.env.new_pad()
         for alt in self.env.load_config().iter_alternatives():
@@ -184,14 +177,6 @@ class HelperPlugin(Plugin):
                 'measures': set['measures'].lower().split(),
                 'replFrac': set['replace_frac']
             }
-
-    def on_before_build_all(self, builder, **extra):
-        build_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print('Build time: ' + build_time)
-        self.env.jinja_env.globals['DATE_NOW'] = build_time
-        # update project settings once per build
-        self.processCLI(getattr(builder, 'extra_flags'))
-        self.processSettings()
 
     # def on_process_template_context(self, context, **extra):
     #     pass

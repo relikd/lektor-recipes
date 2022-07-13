@@ -1,7 +1,4 @@
 <!doctype html>
-{%- if ENABLE_APPCACHE %}
-<html manifest="{{ site.get('app.appcache', alt=this.alt)|url }}">
-{% endif -%}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=0.75">
@@ -16,9 +13,6 @@
 <body> {#- ontouchstart="" #}
   <header>
     <a id="logo" href="{{ site.get('/', alt=this.alt)|url }}">recipe lekture</a>
-    {%- if ENABLE_APPCACHE %}
-    <i id="cache-status" title="cache status"></i>
-    {%- endif %}
     <nav>
       <ul>
         {%- set allRecipes = site.get('recipes', this.alt) %}

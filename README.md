@@ -10,11 +10,11 @@ Features
 -------
 
 - Responsive design (desktop, mobile, print)
-- Mobile application (AppCache & app manifest)
-- Offline cache (local storage [150 recipes ~ 3mb])
+- Mobile Web-Application
 - Multi-language (DE & EN, more can be added)
-- Blazing fast (due to cache and minimal data usage)
+- Blazing fast due to minimal data usage
 - Indexed (group by time, ingredients, or tags)
+- PDF export (if LuaLaTex is installed)
 - ~~static search~~ (**not yet**, but coming soon…)
 
 
@@ -27,7 +27,7 @@ Install
 
 3. Run `make dev server` to run a local server and preview the page.
 
-4. For distribution run `make dist build` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
+4. For distribution run `make build pdf deploy` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
 
 
 ### Modify
@@ -41,7 +41,6 @@ A few things to note:
 
 3. The preferred __image size__ is `800x600`. Please scale all images down to save bandwidth. Try to keep an aspect ratio of 4:3 for the first image, or it will be cropped on the recipe overview page! All other images will be shown unmodified in whatever aspect ratio is provided (individual recipe page)
 
-4. __AppCache__ is disabled during development. However, you can pass `-f ENABLE_APPCACHE` to any `lektor` command to enable it. The makefile does this by default for the `build` target.
 
 Also, see [Lektor docs](https://www.getlektor.com/docs/) and [jinja2 template](https://jinja.palletsprojects.com/en/2.10.x/templates/) documentation.
 
