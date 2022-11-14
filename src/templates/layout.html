@@ -12,7 +12,7 @@
 </head>
 <body> {#- ontouchstart="" #}
   <header>
-    <a id="logo" href="{{ site.get('/', alt=this.alt)|url }}">recipe lekture</a>
+    <a id="logo" href="{{ site.get('/', this.alt)|url }}">recipe lekture</a>
     <nav>
       <ul>
         {%- set allRecipes = site.get('recipes', this.alt) %}
@@ -39,10 +39,11 @@
       <td>Build with <a href="https://www.getlektor.com/">Lektor</a>, template by <a href="https://github.com/relikd/lektor-recipes">relikd</a>.</td>{#--#}
       <td class="buttons xlarge">
         <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{ localize(this.alt, 'other', 'get_pdf') }}"><img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}"></a>
+        {%- set url_without_alt = ('.'|url(absolute=True))[4:] -%}
         {%- if this.alt == 'de' -%}
-        <a href="{{ '.'|url(alt='en') }}" title="zur englischen Seite wechseln">🇺🇸</a>
+        <a href="/en/{{url_without_alt}}" title="zur englischen Seite wechseln">🇺🇸</a>
         {%- else -%}
-        <a href="{{ '.'|url(alt='de') }}" title="switch to german page">🇩🇪</a>
+        <a href="/de/{{url_without_alt}}" title="switch to german page">🇩🇪</a>
         {%- endif -%}
       </td>{#--#}
     </table>{#--#}
