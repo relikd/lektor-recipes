@@ -34,6 +34,7 @@ dist:
 
 clean:
 	@echo 'Cleaning output'
+	@cd '$(PROJDIR)' && rm -rf "$$(lektor project-info --output-path)/.lektor/buildstate"*
 	@cd '$(PROJDIR)' && lektor clean --yes -v
 
 plugins:
@@ -46,6 +47,9 @@ clean-all: clean plugins
 
 server:
 	@cd '$(PROJDIR)' && lektor server # -f ENABLE_PDF_EXPORT
+
+server-v:
+	@cd '$(PROJDIR)' && lektor server -v
 
 build: dist
 	@cd '$(PROJDIR)' && \
