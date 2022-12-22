@@ -24,18 +24,15 @@
     <div id="rating" class="xlarge">{{ this.rating|rating }}</div>
     <div class="difficulty {{this.difficulty}}">
       <div></div><div></div><div></div>
-      {%- if this.difficulty %}
-      <span>{{ localize(this.alt, 'difficulty', this.difficulty) }}</span>
-      {%- else %}
-      <span class="small">{{ localize(this.alt, 'difficulty._unset') }}</span>
-      {%- endif %}
+      <span {% if not this.difficulty %}class="small"{%- endif %}>{{ 
+        bag('i18n+' + this.alt, 'difficulty', this.difficulty or '_unset') }}</span>
     </div>
-    <div>{{ localize(this.alt, 'duration.label') }}: {{ this.time|duration(this.alt) if this.time else '—' }}</div>
-    <div>{{ localize(this.alt, 'yield.label') }}: {{ this.yield or '—' }}</div>
+    <div>{{ bag('i18n+' + this.alt, 'duration.label') }}: {{ this.time|duration(this.alt) if this.time else '—' }}</div>
+    <div>{{ bag('i18n+' + this.alt, 'yield.label') }}: {{ this.yield or '—' }}</div>
   </section>
 
   <section id="ingredients">
-    <h2>{{ localize(this.alt, 'title.ingredients') }}:</h2>
+    <h2>{{ bag('i18n+' + this.alt, 'title.ingredients') }}:</h2>
     <ul class="no-bullets li-lg-space">
     {%- for ing in this|enumIngredients(this.alt) %}
       {%- if ing['group'] %}
@@ -46,7 +43,7 @@
         {%- if ing['measure'] %}{{ ing['measure'] }} {% endif -%}
         <span class="light-red">{{ ing['name'] }}</span>
         {%- if ing['note'] -%}
-        <span class="small italic">{{ ', ' ~ ing['note'] | replaceAtRefURLs(label=localize(this.alt, 'ingredients.recipeLink')) }}</span>
+        <span class="small italic">{{ ', ' ~ ing['note'] | replaceAtRefURLs(label=bag('i18n+' + this.alt, 'ingredients.recipeLink')) }}</span>
         {%- endif -%}
       </li>
       {%- endif %}
@@ -55,8 +52,8 @@
   </section>
 
   <section id="directions">
-    <h2>{{ localize(this.alt, 'title.directions') }}:</h2>
-    {% if site.get('settings', alt=this.alt)['replace_temp'] -%}
+    <h2>{{ bag('i18n+' + this.alt, 'title.directions') }}:</h2>
+    {% if site.get('/settings', alt=this.alt)['replace_temp'] -%}
       {{ this.directions.html|replace('°C', '℃')|replace('°F', '℉') }}
     {% else -%}
       {{ this.directions }}

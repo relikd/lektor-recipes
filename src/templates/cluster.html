@@ -24,7 +24,7 @@
     {%- elif this.group_key == 'time' -%}
       {{ attrib | durationCluster(this.xdata, this.alt) }}
     {%- elif this.group_key == 'difficulty' -%}
-      {{ localize(this.alt, 'difficulty', attrib) }}
+      {{ bag('i18n+' + this.alt, 'difficulty', attrib) }}
     {%- else -%}
       {{ attrib }}
     {%- endif -%}</dt>

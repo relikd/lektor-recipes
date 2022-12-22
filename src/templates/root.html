@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% from "macros/recipes.html" import render_recipe_list %}
 {% block body %}
-  <h1>{{ localize(this.alt, 'title.latest') }}</h1>
+  <h1>{{ bag('i18n+' + this.alt, 'title.latest') }}</h1>
   <div class="latest">
   	{{ render_recipe_list(site.query('recipes', this.alt).order_by('-date', 'name'), limit=6) }}
   </div>

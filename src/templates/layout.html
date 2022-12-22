@@ -15,10 +15,15 @@
     <a id="logo" href="{{ site.get('/', this.alt)|url }}">recipe lekture</a>
     <nav>
       <ul>
-        {%- set allRecipes = site.get('recipes', this.alt) %}
-        <li><a {% if this == allRecipes %}class="active"{% endif %} href="{{ allRecipes|url }}">{{ localize(this.alt, 'title.all_recipes') }}</a></li>
-        {%- for navpage in site.query('/groupby', this.alt) %}
-        <li><a {% if this.is_child_of(navpage) %}class="active"{% endif %} href="{{ navpage|url }}">{{ navpage.name }}</a></li>
+        {%- set allRecipes = site.get('/recipes', this.alt) %}
+        <li><a {% if this == allRecipes -%}
+          class="active"
+        {%- endif %} href="{{ allRecipes|url }}">{{ bag('i18n+' + this.alt, 'title.all_recipes') }}</a></li>
+
+        {%- for groupby in site.query('/groupby', this.alt) %}
+        <li><a {% if this.url_path.startswith(groupby.url_path) -%}
+          class="active"
+        {%- endif %} href="{{ groupby|url }}">{{ groupby.name }}</a></li>
         {%- endfor %}
       </ul>
     </nav>
@@ -38,7 +43,9 @@
     <table width="100%">{#--#}
       <td>Build with <a href="https://www.getlektor.com/">Lektor</a>, template by <a href="https://github.com/relikd/lektor-recipes">relikd</a>.</td>{#--#}
       <td class="buttons xlarge">
-        <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{ localize(this.alt, 'other', 'get_pdf') }}"><img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}"></a>
+        <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
+          <img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}">{#--#}
+        </a>
         {%- set url_without_alt = ('.'|url(absolute=True))[4:] -%}
         {%- if this.alt == 'de' -%}
         <a href="/en/{{url_without_alt}}" title="zur englischen Seite wechseln">🇺🇸</a>

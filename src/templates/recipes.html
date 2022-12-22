@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
 {% from "macros/recipes.html" import render_recipe_list %}
 {% from "macros/pagination.html" import render_pagination_all %}
-{% block title %}{{ localize(this.alt, 'title.recipes') }}{% endblock %}
+{% block title %}{{ bag('i18n+' + this.alt, 'title.recipes') }}{% endblock %}
 {% block body %}
-  <h1>{{ localize(this.alt, 'title.recipes') }} <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{ localize(this.alt, 'other', 'get_pdf') }}"><img class="h1em" alt="(PDF)" height="20pt" src="{{ '/img/icon-pdf.svg'|url }}"></a></h1>
+  <h1>{{
+    bag('i18n+' + this.alt, 'title.recipes')
+  }} <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{
+    bag('i18n+' + this.alt, 'other.get_pdf')
+  }}"><img class="h1em" alt="(PDF)" height="20pt" src="{{ '/img/icon-pdf.svg'|url }}"></a></h1>
   {{ render_recipe_list(this.pagination.items) }}
   {{ render_pagination_all(this.pagination) }}
 {% endblock %}
