@@ -18,7 +18,8 @@
 %-------------------------------------------
 % Defines & Geometry
 %-------------------------------------------
-\graphicspath{{\builddir/en/}}
+\input{out/builddir} % \def\buildDir{LEKTOR_OUTPUT_PATH}
+\graphicspath{{\buildDir/}}
 
 \definecolor{red2}{HTML}{AA203A}
 \definecolor{red3}{HTML}{EE6A84}
@@ -157,7 +158,7 @@
     \vspace*{.06\textheight}
     \includegraphics[width=54mm]{misc/logo.pdf}\par
     \vspace*{.06\textheight}
-    {\huge\sf recipe lekture}
+    {\huge\sf\tTitle}
     \vfill
     \today
   \end{titlepage}
@@ -186,8 +187,8 @@
     \enlargethispage{5.75ex}
     \let\thefootnote\relax\footnotetext{%
       \hspace{-.6em} Source: \ifx\relax#2\relax#1\else\href{#1}{#2}\fi%
-    }\fi%
-  }
+    }%
+  }\fi%
 }
 
 \newcommand{\newrecipe}[2]{\clearpage\section{#2}\label{#1}}
