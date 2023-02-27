@@ -1,5 +1,7 @@
 PROJDIR := src
 TEXER := lualatex
+LEKTOR := lektor --project $(PROJDIR)
+BUILD_DIR := $$($(LEKTOR) project-info --output-path)
 
 .PHONY: help dev dist clean plugins clean-all server build deploy pdf-clean pdf find-links
 
@@ -34,26 +36,28 @@ dist:
 
 clean:
 	@echo 'Cleaning output'
-	@cd '$(PROJDIR)' && rm -rf "$$(lektor project-info --output-path)/.lektor/buildstate"*
-	@cd '$(PROJDIR)' && lektor clean --yes -v
+	@rm -rf "$(BUILD_DIR)/.lektor/buildstate"*
+	@$(LEKTOR) clean --yes -v
 
 plugins:
 	@echo 'Cleaning plugins'
-	@cd '$(PROJDIR)' && lektor plugins flush-cache && lektor plugins list
+	@$(LEKTOR) plugins flush-cache
+	@$(LEKTOR) plugins list
 
 clean-all: clean plugins
 
 # Build
 
 server:
-	@cd '$(PROJDIR)' && lektor server # -f ENABLE_PDF_EXPORT
+	@$(LEKTOR) server # -f ENABLE_PDF_EXPORT
 
 server-v:
-	@cd '$(PROJDIR)' && lektor server -v
+	@$(LEKTOR) server -v
 
+# --output-path is relative to project file
+# --buildstate-path is relative to current working directory
 build: dist
-	@cd '$(PROJDIR)' && \
-	lektor build --output-path ../bin --buildstate-path ../build-state -f ENABLE_PDF_EXPORT
+	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state -f ENABLE_PDF_EXPORT
 	@echo
 	@echo 'Checking dead links ...'
 	@python3 extras/find-dead-links.py
@@ -65,27 +69,10 @@ deploy:
 	@echo # --dry-run
 	rsync -rclzv --exclude=.lektor --exclude=.DS_Store --delete bin/ vps:/srv/http/recipe-lekture
 
-pdf-clean:
-	@rm -f extras/pdf-export/*.{aux,log,out,toc}
-
-pdf-build:
-	@echo
-	@echo 'Generating PDF from tex source ...'
-	@echo 'Check if $(TEXER) exists'
-	@which $(TEXER)
-	@cd 'extras/pdf-export/' && \
-	SECONDS=0; \
-	for i in 1 2; do \
-		for alt in de en; do \
-			fname="pdf-$${alt}.tex"; \
-			echo "$$ $(TEXER) $${fname} [$${i}]"; \
-			$(TEXER) $${fname} > /dev/null; \
-		done; \
-	done; \
-	echo "done. finished after $${SECONDS}s."
-	mv extras/pdf-export/pdf-*.pdf bin/static
-
-pdf: pdf-clean pdf-build pdf-clean
+pdf:
+	@SECONDS=0; \
+	"$(PROJDIR)/_tex-to-pdf/build_manually.sh" \
+	&& echo "done. finished after $${SECONDS}s."
 
 # Helper methods on all recipes
 
