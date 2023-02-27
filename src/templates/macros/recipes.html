@@ -8,7 +8,7 @@
         
         {#-   overlay on hover and always-visible icons   #}
         <div class="overlay">
-          <div class="hover"><div class="time">{{ recipe.time|duration(recipe.alt) }}</div></div>
+          <div class="hover"><div class="time">{{ recipe.time | asDuration(recipe.alt) }}</div></div>
           <div class="icon-bar">
             {%- if 'raw' in recipe.tags -%}<i class="icon raw"></i>{%- endif -%}
             {%- if 'glutenfree' in recipe.tags -%}<i class="icon gf"></i>{%- endif -%}

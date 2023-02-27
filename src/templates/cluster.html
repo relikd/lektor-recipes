@@ -1,33 +1,10 @@
 {% extends "layout.html" %}
 {% block title %}{{ this.name }}{% endblock %}
 {% block body %}
-
-  {%- if this.group_key in ['rating', 'time'] -%}
-    {%- set sortType = 'int' -%}
-  {%- elif this.xdata -%}
-    {%- set sortType = this.xdata + [''] -%}
-  {%- endif -%}
-
-  {%- set all = site.query('/recipes', this.alt) | groupByAttribute(this.group_key, this.alt) | groupSort(sortType, this.reverse_order) -%}
-
-  {%- if this.group_key == 'time' -%}
-    {%- set all = all | groupTimeCluster(this.xdata, this.reverse_order) -%}
-  {%- endif -%}
-
   <h1>{{ this.name }}</h1>
   <dl class="cluster">
-  {%- for attrib, recipes in all -%}
-    <dt>{%- if this.group_key == 'rating' -%}
-      {{ attrib | rating }}
-    {%- elif not attrib -%}
-      {{ this.null_fallback }}
-    {%- elif this.group_key == 'time' -%}
-      {{ attrib | durationCluster(this.xdata, this.alt) }}
-    {%- elif this.group_key == 'difficulty' -%}
-      {{ bag('i18n+' + this.alt, 'difficulty', attrib) }}
-    {%- else -%}
-      {{ attrib }}
-    {%- endif -%}</dt>
+  {%- for group_name, recipes in site.query('/recipes', this.alt) | performGroupBy(this.group_key, this.reverse_order, this.alt) -%}
+    <dt>{{ group_name or this.null_fallback }}</dt>
     <dd>
       {%- set pipe = joiner(' | ') -%}
       {%- for recipe in recipes | sort(attribute='name') -%}

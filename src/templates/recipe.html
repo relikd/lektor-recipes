@@ -21,29 +21,29 @@
   <h1>{{ this.name }}</h1>
 
   <section id="metrics" class="small">
-    <div id="rating" class="xlarge">{{ this.rating|rating }}</div>
+    <div id="rating" class="xlarge">{{ this.rating | asRating }}</div>
     <div class="difficulty {{this.difficulty}}">
       <div></div><div></div><div></div>
       <span {% if not this.difficulty %}class="small"{%- endif %}>{{ 
         bag('i18n+' + this.alt, 'difficulty', this.difficulty or '_unset') }}</span>
     </div>
-    <div>{{ bag('i18n+' + this.alt, 'duration.label') }}: {{ this.time|duration(this.alt) if this.time else '—' }}</div>
+    <div>{{ bag('i18n+' + this.alt, 'duration.label') }}: {{ this.time | asDuration(this.alt) or '—' }}</div>
     <div>{{ bag('i18n+' + this.alt, 'yield.label') }}: {{ this.yield or '—' }}</div>
   </section>
 
   <section id="ingredients">
     <h2>{{ bag('i18n+' + this.alt, 'title.ingredients') }}:</h2>
     <ul class="no-bullets li-lg-space">
-    {%- for ing in this|enumIngredients(this.alt) %}
-      {%- if ing['group'] %}
-      <li class="dark-red bold mrgTopMd">{{ ing['group'] }}</li>
+    {%- for ing in this.ingredients %}
+      {%- if ing.isGroup %}
+      <li class="dark-red bold mrgTopMd">{{ ing.name }}:</li>
       {%- else %}
       <li>
-        {%- if ing['value']   %}{{ ing['value']   }} {% endif -%}
-        {%- if ing['measure'] %}{{ ing['measure'] }} {% endif -%}
-        <span class="light-red">{{ ing['name'] }}</span>
-        {%- if ing['note'] -%}
-        <span class="small italic">{{ ', ' ~ ing['note'] | replaceAtRefURLs(label=bag('i18n+' + this.alt, 'ingredients.recipeLink')) }}</span>
+        {%- if ing.quantity %}{{ ing.quantity }} {% endif -%}
+        {%- if ing.unit %}{{ ing.unit }} {% endif -%}
+        <span class="light-red">{{ ing.name }}</span>
+        {%- if ing.note -%}
+        <span class="small italic">{{ ', ' ~ ing.note | replaceAtRefURLs(label=bag('i18n+' + this.alt, 'ingredients.recipeLink')) }}</span>
         {%- endif -%}
       </li>
       {%- endif %}

@@ -1,9 +1,3 @@
 sort_key: 10
 ---
 group_key: difficulty
----
-xdata:
-
-easy
-medium
-hard
