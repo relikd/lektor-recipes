@@ -43,7 +43,11 @@
     <table width="100%">{#--#}
       <td>Build with <a href="https://www.getlektor.com/">Lektor</a>, template by <a href="https://github.com/relikd/lektor-recipes">relikd</a>.</td>{#--#}
       <td class="buttons xlarge">
-        <a href="/static/pdf-{{ this.alt }}.pdf" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
+        {#-
+        we could use `site.get('/recipes.tex@LatexPDF', alt=this.alt) | url`
+        but then this will create a dependency on all recipes
+        -#}
+        <a href="{{ '/'|url(alt=this.alt) + 'recipes.pdf' }}" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
           <img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}">{#--#}
         </a>
         {%- set url_without_alt = ('.'|url(absolute=True))[4:] -%}

@@ -1,0 +1,63 @@
+{%- if this.alt == 'de' -%}
+\documentclass[a4paper,12pt,twoside]{article}
+\usepackage[ngerman]{babel}
+{%- elif this.alt == 'en' -%}
+\documentclass[letter,12pt,twoside]{article}
+\usepackage[english]{babel}
+{%- else -%}
+\documentclass{article}
+\UnknownAlternative{alt={{this.alt}}}
+{%- endif %}
+\include{setup}
+
+\def\tTitle{ {{- this.title -}} }
+\def\tIngredients{ {{- bag('i18n+' + this.alt, 'title.ingredients') -}} }
+\def\tRecipe{ {{- bag('i18n+' + this.alt, 'latex.recipe') -}} }
+\def\tPagePrefix{ {{- bag('i18n+' + this.alt, 'latex.pagePrefix') -}} }
+
+\begin{document}
+\makefrontmatter
+
+{%- for recipe in site.get('/recipes', alt=this.alt).children -%}
+{%- set img = recipe | title_image(small=True) %}
+
+{# recipe title (start on new page) #}
+\newrecipe{ {{- recipe._slug -}} }{ {{- recipe.name | latexStr -}} }
+{# duration & yield subtitle -#}
+\meta{ {{- recipe.time | asDuration(this.alt) -}} }{ {{- recipe.yield or '' -}} }
+{# add source link on page footer -#}
+\footer{ {{- recipe.source.url | latexStr -}} }{ {{- recipe.source.host | latexStr -}} }
+
+{# enumerate ingredients -#}
+\begin{ingredients}{ {{- img | url(absolute=True) if img else '' -}} }
+
+{%- for ing in recipe.ingredients %}
+	{%- if ing.isGroup %}
+\ingGroup{ {{- ing.name -}} }
+	{%- else %}
+\item[
+		{%- if ing.quantity %}{{ ing.quantity }}{% endif -%}
+		{%- if ing.quantity and ing.unit %}~{% endif -%}
+		{%- if ing.unit %}{{ ing.unit }}{% endif -%}
+] \ingName{ {{- ing.name or '' -}} }
+		{%- if ing.note -%}
+\ingDetail{
+		{%- for word in ing.note.split() -%}
+			{#- detect recipe reference links -#}
+			{%- if word.startswith('@') %} \pagelink{ {{- word[4:].rstrip('/') -}} }
+			{#- or copy unchanged -#}
+			{%- else %} {{ word }}{%- endif -%}
+		{%- endfor -%}
+}
+		{%- endif -%}
+	{%- endif -%}
+{%- else %}
+{#- if no ingredients add empty item, otherwise latex will throw error #}
+\item
+{%- endfor %}
+\end{ingredients}
+
+{{ recipe.directions.html | latexHtml | trim }}
+{% endfor %}
+
+\end{document}

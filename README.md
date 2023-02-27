@@ -13,7 +13,7 @@ Features
 - Mobile Web-Application
 - Multi-language (DE & EN, more can be added)
 - Blazing fast due to minimal data usage
-- Indexed (group by time, ingredients, or tags)
+- Indexed (group by time, tags, difficulty, or ingredients)
 - PDF export (if LuaLaTex is installed)
 - ~~static search~~ (**not yet**, but coming soon…)
 
@@ -27,7 +27,7 @@ Install
 
 3. Run `make dev server` to run a local server and preview the page.
 
-4. For distribution run `make build pdf deploy` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
+4. For distribution run `make build deploy` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
 
 
 ### Modify
