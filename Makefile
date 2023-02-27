@@ -1,67 +1,71 @@
 PROJDIR := src
-TEXER := lualatex
 LEKTOR := lektor --project $(PROJDIR)
 BUILD_DIR := $$($(LEKTOR) project-info --output-path)
 
-.PHONY: help dev dist clean plugins clean-all server build deploy pdf-clean pdf find-links
-
+.PHONY: help
 help:
 	@echo
 	@echo '  dev     - Switch to development branch'
 	@echo '  dist    - Switch to distribution branch'
 	@echo '  clean   - Removes all temporary server-build files (not ./bin)'
 	@echo '  plugins - Clean and rebuild plugin cache'
-	@echo '  clean-all - Rebuild everything (not ./bin)'
 	@echo
 	@echo '  server  - Start lektor server with live change updates'
-	@echo '  build   - Build deployable website into ./bin'
+	@echo '  build   - Build deployable website into ./bin (incl. PDF)'
 	@echo '  deploy  - Custom rsync command to sync ./bin to remote server'
-	@echo '  pdf     - Generate PDF from tex (after build)'
+	@echo '  pdf     - Generate PDF from tex (not needed if `make build`)'
 	@echo
 	@echo '  find-links - Search for cross reference between recipes'
+	@echo '  find-yield - Print unique `yield:` attribute values'
+	@echo '  find-time  - Print unique `time:` attribute values'
 	@echo
-
-define switch_to
-	@echo Set source to $(1)
-	@rm $(PROJDIR)/content/recipes; ln -s $(1) $(PROJDIR)/content/recipes
-endef
 
 # Clean
 
+.PHONY: dev
 dev:
-	$(call switch_to, '../../data/development/')
+	@echo Set source to '../../data/development/'
+	@rm $(PROJDIR)/content/recipes
+	@ln -s '../../data/development/' $(PROJDIR)/content/recipes
 
-dist: 
-	$(call switch_to, '../../data/distribution/')
+.PHONY: dist
+dist:
+	@echo Set source to '../../data/distribution/'
+	@rm $(PROJDIR)/content/recipes
+	@ln -s '../../data/distribution/' $(PROJDIR)/content/recipes
 
+.PHONY: clean
 clean:
 	@echo 'Cleaning output'
 	@rm -rf "$(BUILD_DIR)/.lektor/buildstate"*
 	@$(LEKTOR) clean --yes -v
 
+.PHONY: plugins
 plugins:
 	@echo 'Cleaning plugins'
 	@$(LEKTOR) plugins flush-cache
 	@$(LEKTOR) plugins list
 
-clean-all: clean plugins
-
 # Build
 
+.PHONY: server
 server:
 	@$(LEKTOR) server # -f ENABLE_PDF_EXPORT
 
+.PHONY: server-v
 server-v:
 	@$(LEKTOR) server -v
 
 # --output-path is relative to project file
 # --buildstate-path is relative to current working directory
+.PHONY: build
 build: dist
 	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state -f ENABLE_PDF_EXPORT
 	@echo
 	@echo 'Checking dead links ...'
 	@python3 extras/find-dead-links.py
 
+.PHONY: deploy
 deploy:
 	@echo
 	@echo 'Warning: This will not(!) build but sync all files in ./bin'
@@ -69,6 +73,7 @@ deploy:
 	@echo # --dry-run
 	rsync -rclzv --exclude=.lektor --exclude=.DS_Store --delete bin/ vps:/srv/http/recipe-lekture
 
+.PHONY: pdf
 pdf:
 	@SECONDS=0; \
 	"$(PROJDIR)/_tex-to-pdf/build_manually.sh" \
@@ -76,6 +81,7 @@ pdf:
 
 # Helper methods on all recipes
 
+.PHONY: find-links
 find-links:
 	@echo
 	@cd '$(PROJDIR)/content/recipes' && \
@@ -83,6 +89,7 @@ find-links:
 	|| echo 'nothing found.'
 	@echo
 
+.PHONY: find-yield
 find-yield:
 	@echo
 	@cd '$(PROJDIR)/content/recipes' && \
@@ -91,6 +98,7 @@ find-yield:
 	|| echo 'nothing found.'
 	@echo
 
+.PHONY: find-time
 find-time:
 	@cd '$(PROJDIR)/content/recipes' && \
 	find */*.lr -exec grep "^time: .*" -o {} \; \
