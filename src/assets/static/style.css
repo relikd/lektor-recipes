@@ -142,7 +142,9 @@ a:hover .recipe-tile .hover { display: block; background: #0006 }
  * Individual recipe
  */
 .recipe h2 { font-size: 0.8em; margin: 0 0 1em 0 }
-.recipe #img-carousel { padding: 0 50px; margin: 0 -30px }
+.recipe #img-carousel { margin: 0 -30px }
+.recipe #img-carousel img:first-child { padding-left: 50px }
+.recipe #img-carousel img:last-child { padding-right: 50px }
 .recipe #img-carousel:empty { display: none; }
 .recipe #source { margin-left: -1em; margin-bottom: -1.5em }
 .recipe #metrics { float: right; margin: 0 0 15px 25px; max-width: 180px }
@@ -179,7 +181,9 @@ a:hover .recipe-tile .hover { display: block; background: #0006 }
   .recipe #ingredients { float: unset; max-width: 100% }
 }
 @media screen and (max-width: 32em) {
-  .recipe #img-carousel { padding: 0 10px; height: calc(75vw - 2*10px) }
+  .recipe #img-carousel { height: calc(75vw - 2*10px) }
+  .recipe #img-carousel img:first-child { padding-left: 10px }
+  .recipe #img-carousel img:last-child { padding-right: 10px }
 }
 
 @media print {
