@@ -63,7 +63,7 @@ build: dist
 	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state -f ENABLE_PDF_EXPORT
 	@echo
 	@echo 'Checking dead links ...'
-	@python3 extras/find-dead-links.py
+	@python3 extras/find-dead-links.py 'data/development'
 
 .PHONY: deploy
 deploy:
@@ -73,6 +73,7 @@ deploy:
 	@echo # --dry-run
 	rsync -rclzv --exclude=.lektor --exclude=.DS_Store --delete bin/ vps:/srv/http/recipe-lekture
 
+# technically this isnt needed anymore but it simplyfies latex development
 .PHONY: pdf
 pdf:
 	@SECONDS=0; \
