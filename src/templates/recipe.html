@@ -4,7 +4,8 @@
 <article class="recipe">
   <!-- date added: {{ this.date }} -->
   <section id="img-carousel" class="v-scroll center">
-    {%- for img in this | sorted_images %}
+    {%- for img in this.attachments.images | sort(attribute='_id')
+      if img._id.rsplit('.')[0] != 'cov' %}
     <img class="lozad" data-src="{{ img|url }}" height="400">
     {%- endfor -%}
   </section>

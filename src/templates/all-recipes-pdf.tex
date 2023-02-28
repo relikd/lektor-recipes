@@ -18,8 +18,7 @@
 \begin{document}
 \makefrontmatter
 
-{%- for recipe in site.get('/recipes', alt=this.alt).children -%}
-{%- set img = recipe | title_image(small=True) %}
+{%- for recipe in site.get('/recipes', alt=this.alt).children %}
 
 {# recipe title (start on new page) #}
 \newrecipe{ {{- recipe._slug -}} }{ {{- recipe.name | latexStr -}} }
@@ -29,6 +28,7 @@
 \footer{ {{- recipe.source.url | latexStr -}} }{ {{- recipe.source.host | latexStr -}} }
 
 {# enumerate ingredients -#}
+{%- set img = recipe | cover_image -%}
 \begin{ingredients}{ {{- img | url(absolute=True) if img else '' -}} }
 
 {%- for ing in recipe.ingredients %}

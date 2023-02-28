@@ -12,7 +12,7 @@
 </head>
 <body> {#- ontouchstart="" #}
   <header>
-    <a id="logo" href="{{ site.get('/', this.alt)|url }}">recipe lekture</a>
+    <a id="logo" href="{{ '/'|url }}">recipe lekture</a>
     <nav>
       <ul>
         {%- set allRecipes = site.get('/recipes', this.alt) %}
@@ -47,7 +47,7 @@
         we could use `site.get('/recipes.tex@LatexPDF', alt=this.alt) | url`
         but then this will create a dependency on all recipes
         -#}
-        <a href="{{ '/'|url(alt=this.alt) + 'recipes.pdf' }}" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
+        <a href="{{ '/'|url + 'recipes.pdf' }}" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
           <img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}">{#--#}
         </a>
         {%- set url_without_alt = ('.'|url(absolute=True))[4:] -%}

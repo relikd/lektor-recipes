@@ -14,9 +14,7 @@ from .durationcluster import (
 from .ingredients import IngredientsListType
 from .latex import TexSources, raw_text_to_tex, html_to_tex
 from .settings import Settings
-from .utils import (
-    fillupText, replace_atref_urls, sorted_images, title_image, noUmlauts
-)
+from .utils import fillupText, replace_atref_urls, cover_image, noUmlauts
 
 
 class MainPlugin(Plugin):
@@ -33,8 +31,7 @@ class MainPlugin(Plugin):
             'replaceAtRefURLs': replace_atref_urls,
             'performGroupBy': self.performGroupBy,
 
-            'sorted_images': sorted_images,
-            'title_image': title_image,
+            'cover_image': cover_image,
 
             'latexStr': raw_text_to_tex,
             'latexHtml': html_to_tex,

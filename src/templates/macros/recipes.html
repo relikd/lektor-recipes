@@ -1,8 +1,6 @@
-{%- macro render_recipe_list(recipes, limit=0) -%}
+{%- macro render_recipes(recipes) -%}
   <div class="tile-grid">
   {%- for recipe in recipes -%}
-    {%- if limit == 0 or loop.index <= limit -%}
-    {%- set img = recipe | title_image(small=True) -%}
     <a href="{{ recipe|url }}">{#--#}
       <div class="recipe-tile">
         
@@ -15,10 +13,11 @@
           </div>
         </div>
 
-        {#-   show image or placeholder text   #}
-        {% if img -%}
+        {#-   show image or placeholder text   -#}
+        {%- set img = recipe | cover_image -%}
+        {%- if img %}
         <img class="lozad" data-src="{{ img|url }}">
-        {%- else -%}
+        {%- else %}
         <div class="placeholder">No Image</div>
         {%- endif -%}
 
@@ -26,7 +25,6 @@
         <p>{{ recipe.name }}</p>
       </div>{#--#}
     </a>
-    {%- endif -%}
   {%- endfor %}
   </div>
 {%- endmacro -%}

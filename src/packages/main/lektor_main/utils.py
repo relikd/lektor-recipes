@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from jinja2.loaders import split_template_path  # lookup_template_name()
+from lektor.context import get_ctx
+from jinja2.loaders import split_template_path  # lookup_template_path()
 from markupsafe import Markup
 import os
 import unicodedata
-from typing import TYPE_CHECKING, Dict, Union, Optional, List
+from typing import TYPE_CHECKING, Dict, Union, Optional, Tuple
 if TYPE_CHECKING:
     from lektor.db import Page, Image
     from lektor.environment import Environment
@@ -51,21 +52,25 @@ def replace_atref_urls(text: str, label: Optional[str] = None) -> str:
     return Markup(' '.join(result))
 
 
-def sorted_images(obj: 'Page', attr: str = 'record_label') -> List['Image']:
-    return sorted(obj.attachments.images,
-                  key=lambda x: getattr(x, attr))  # type:ignore[no-any-return]
-
-
-def title_image(obj: 'Page', attr: str = 'record_label', small: bool = False) \
-        -> Optional['Image']:
-    imgs = sorted_images(obj, attr)
-    img = imgs[0] if imgs else None
-    if img and small:
-        img = img.thumbnail(200, 150, mode='crop')
-    return img
+def cover_image(obj: 'Page') -> Optional['Image']:
+    ''' Find cover image (cov.jpg or sorted first) and apply thumbnail. '''
+    best = None
+    for img in obj.attachments.images:  # type: Image
+        if img['_id'].rsplit('.')[0] == 'cov':
+            best = img
+            break
+        if not best or img['_id'] < best['_id']:
+            best = img
+    if best:
+        ctx = get_ctx()
+        if ctx:
+            ctx.pad.db.track_record_dependency(best)
+        return retina_thumbnail(best, w=200, h=150, mode='crop')[0]
+    return None
 
 
 def noUmlauts(text: str) -> str:
+    ''' Remove umlauts and other unix-path incompatible characters. '''
     # try:
     #     data = unicode(text, 'utf-8')
     # except (TypeError, NameError):
@@ -77,9 +82,47 @@ def noUmlauts(text: str) -> str:
 
 
 def lookup_template_path(name: str, env: 'Environment') -> Optional[str]:
+    ''' Find path to template with name. '''
     pieces = split_template_path(name)
     for base in env.jinja_env.loader.searchpath:
         path = os.path.join(base, *pieces)
         if os.path.isfile(path):
             return path
     return None
+
+
+def retina_thumbnail(
+    image: 'Image',
+    w: Optional[int] = None,
+    h: Optional[int] = None,
+    *,
+    mode: Optional[str] = None,
+    maxwidth: int = 99999999,
+    retina: int = 2,
+) -> Tuple['Image', int, int]:
+    ''' Constraint an image size with the least possible params. '''
+    if mode:
+        assert w and h, 'if using a crop mode, width and height are mandatory.'
+    else:
+        w = min(w, maxwidth * retina) if (w and w < image.width) else None
+        h = h if (h and h < image.height) else None
+        if w and h:
+            if h >= w / image.width * image.height:
+                h = None
+            else:
+                w = None
+        if w:
+            other = round(w / image.width * image.height)
+        elif h:
+            other = round(h / image.height * image.width)
+        else:
+            return image, image.width, image.height
+
+    ew, eh = w or other, h or other
+    w = (w * retina) if w and (w * retina < image.width) else None
+    h = (h * retina) if h and (h * retina < image.height) else None
+    if not w and not h:
+        return image, ew, eh
+    else:
+        img = image.thumbnail(width=w, height=h, mode=mode, upscale=False)
+        return img, ew, eh
