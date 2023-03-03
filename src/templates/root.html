@@ -3,6 +3,6 @@
 {% block body %}
   <h1>{{ bag('i18n+' + this.alt, 'title.latest') }}</h1>
   <div class="latest">
-  	{{ render_recipes(site.query('/recipes', this.alt).order_by('-date', 'name').limit(6)) }}
+  	{{ render_recipes(site.query('/recipes', this.alt).order_by('-date', '_id').limit(6)) }}
   </div>
 {% endblock %}
