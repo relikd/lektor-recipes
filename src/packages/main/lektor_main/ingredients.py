@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from lektor.types import Type
-from typing import TYPE_CHECKING, List, Optional, Any
+from typing import TYPE_CHECKING, List, Optional, Any, Iterator, Tuple
 if TYPE_CHECKING:
+    from lektor.builder import Builder
     from lektor.db import Record
     from lektor.types.base import RawValue
-from .utils import replaceFractions
 from .settings import IngredientConfig
+from .utils import replaceFractions
 
 
 class IngredientEntry:
@@ -111,3 +112,34 @@ class IngredientsListType(Type):
 
     def value_from_raw(self, raw: 'RawValue') -> IngredientsDescriptor:
         return IngredientsDescriptor(raw.value or None)
+
+
+##############################
+#  Check cross-recipe links  #
+##############################
+
+def _detect_atref_urls(recipe: 'Record') -> Iterator[str]:
+    ''' Internal method to iterate over recipe-links in ingredient notes. '''
+    for ing in recipe['ingredients']:
+        if ing.isIngredient and '@' in ing.note:
+            for part in ing.note.split():
+                if part.startswith('@../'):
+                    yield part[4:].rstrip('/')
+
+
+def check_dead_links(builder: 'Builder') -> Iterator[Tuple['Record', str]]:
+    '''
+    Iterate over all recipes and all ingredients notes.
+    If a note contains a recipe link, check if the link is a valid target.
+    If not, print to log but continue building (soft error).
+
+    returns: [recipe, ref-link]
+     '''
+    for alt in builder.pad.config.iter_alternatives():
+        # funny enough, .query('/recipes') does not populate ingredients
+        all_recipes = builder.pad.get('/recipes', alt=alt).children
+        all_ids = set(x['_slug'] for x in all_recipes)
+        for recipe in all_recipes:
+            for ref in _detect_atref_urls(recipe):
+                if ref not in all_ids:
+                    yield recipe, f'@../{ref}/'

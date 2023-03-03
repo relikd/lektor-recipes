@@ -2,6 +2,7 @@
 from lektor.databags import Databags
 from lektor.db import Page  # isinstance
 from lektor.pluginsystem import Plugin
+import os
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, List, Dict, Tuple, Set, Iterator
 if TYPE_CHECKING:
@@ -11,8 +12,9 @@ if TYPE_CHECKING:
 from .durationcluster import (
     int_to_cluster, cluster_as_str, human_readable_duration
 )
-from .ingredients import IngredientsListType
+from .ingredients import IngredientsListType, check_dead_links
 from .latex import TexSources, raw_text_to_tex, html_to_tex
+from .log import Log
 from .settings import Settings
 from .utils import fillupText, replace_atref_urls, cover_image, noUmlauts
 
@@ -59,6 +61,14 @@ class MainPlugin(Plugin):
         # must run after all sources are built
         # or else latex fails because it cannot find referenced images
         TexSources.build(builder)
+
+    def on_after_prune(self, builder: 'Builder', **extra: Any) -> None:
+        root = self.env.root_path  # type: str
+        with Log.group('check dead links', builder):
+            for recipe, link in check_dead_links(builder):
+                Log.error('dead-link: {} ({})'.format(
+                    os.path.relpath(recipe.source_filename or '', root),
+                    Log.Style.red(link)))
 
     ##############
     #  Duration  #

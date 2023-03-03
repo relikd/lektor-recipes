@@ -61,9 +61,6 @@ server-v:
 .PHONY: build
 build: dist
 	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state -f ENABLE_PDF_EXPORT
-	@echo
-	@echo 'Checking dead links ...'
-	@python3 extras/find-dead-links.py 'data/development'
 
 .PHONY: deploy
 deploy:
@@ -89,6 +86,11 @@ find-links:
 	find */*.lr -exec grep --color=auto -i ".\.\./[^ ]*" -o {} + \
 	|| echo 'nothing found.'
 	@echo
+
+.PHONY: find-dead-links
+find-dead-links:
+	@echo 'Checking dead links ...'
+	@python3 extras/find-dead-links.py 'data/development'
 
 .PHONY: find-yield
 find-yield:
