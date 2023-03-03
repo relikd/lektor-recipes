@@ -45,22 +45,22 @@ class MainPlugin(Plugin):
         #     'len': len,
         #     'now': datetime.now
         # })
-        # Latex -> PDF Build program
-        make_pdf = extra.get('extra_flags', {}).get('ENABLE_PDF_EXPORT', False)
-        TexSources.registerBuilder(self.env, enabled=make_pdf)
+    #     # Latex -> PDF Build program
+    #     make_pdf = extra.get('extra_flags', {}).get('ENABLE_PDF_EXPORT', False)
+    #     TexSources.registerBuilder(self.env, enabled=make_pdf)
 
-    def on_after_build(
-        self, builder: 'Builder', source: 'Record', **extra: Any
-    ) -> None:
-        if not isinstance(source, Page):
-            return  # ignore Asset, Directory, etc.
-        if source.path.endswith('.tex'):  # type: ignore[attr-defined]
-            TexSources.add(builder, source)
+    # def on_after_build(
+    #     self, builder: 'Builder', source: 'Record', **extra: Any
+    # ) -> None:
+    #     if not isinstance(source, Page):
+    #         return  # ignore Asset, Directory, etc.
+    #     if source.path.endswith('.tex'):  # type: ignore[attr-defined]
+    #         TexSources.add(builder, source)
 
-    def on_after_build_all(self, builder: 'Builder', **extra: Any) -> None:
-        # must run after all sources are built
-        # or else latex fails because it cannot find referenced images
-        TexSources.build(builder)
+    # def on_after_build_all(self, builder: 'Builder', **extra: Any) -> None:
+    #     # must run after all sources are built
+    #     # or else latex fails because it cannot find referenced images
+    #     TexSources.build(builder)
 
     def on_after_prune(self, builder: 'Builder', **extra: Any) -> None:
         root = self.env.root_path  # type: str

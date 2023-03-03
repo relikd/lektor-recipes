@@ -27,7 +27,7 @@ Install
 
 3. Run `make dev server` to run a local server and preview the page.
 
-4. For distribution run `make build deploy` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
+4. For distribution run `make build pdf deploy` and add an [official deploy](https://www.getlektor.com/docs/deployment/).
 
 
 ### Modify

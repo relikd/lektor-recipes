@@ -64,7 +64,7 @@ server-v:
 # --buildstate-path is relative to current working directory
 .PHONY: build
 build: dist
-	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state -f ENABLE_PDF_EXPORT
+	@$(LEKTOR) build --output-path ../bin --buildstate-path build-state # -f ENABLE_PDF_EXPORT
 
 .PHONY: deploy
 deploy:
