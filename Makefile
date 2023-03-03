@@ -1,6 +1,10 @@
 PROJDIR := src
 LEKTOR := lektor --project $(PROJDIR)
 BUILD_DIR := $$($(LEKTOR) project-info --output-path)
+RESOLVED_BUILD_DIR := $$( \
+	if [ $$(readlink 'src/content/recipes') == "../../data/distribution/" ]; \
+	then echo "$(PWD)/bin"; \
+	else echo "$(BUILD_DIR)"; fi)
 
 .PHONY: help
 help:
@@ -73,8 +77,10 @@ deploy:
 # technically this isnt needed anymore but it simplyfies latex development
 .PHONY: pdf
 pdf:
+	@echo
+	@echo 'Generating PDF from tex source ...'
 	@SECONDS=0; \
-	"$(PROJDIR)/_tex-to-pdf/build_manually.sh" \
+	"$(PROJDIR)/_tex-to-pdf/build_manually.sh" "$(RESOLVED_BUILD_DIR)" \
 	&& echo "done. finished after $${SECONDS}s."
 
 # Helper methods on all recipes
