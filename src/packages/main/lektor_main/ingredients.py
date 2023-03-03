@@ -103,9 +103,7 @@ class IngredientsDescriptor:
             return self
         if not self.raw:
             return []
-        data = self.parse(self.raw, record)
-        del self.raw
-        return data
+        return self.parse(self.raw, record)
 
 
 class IngredientsListType(Type):

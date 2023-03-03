@@ -44,7 +44,7 @@
         {%- if ing.unit %}{{ ing.unit }} {% endif -%}
         <span class="light-red">{{ ing.name }}</span>
         {%- if ing.note -%}
-        <span class="small italic">{{ ', ' ~ ing.note | replaceAtRefURLs(label=bag('i18n+' + this.alt, 'ingredients.recipeLink')) }}</span>
+        <span class="small italic">, {{ ing.note | replaceAtRefURLs(label=bag('i18n+' + this.alt, 'ingredients.recipeLink')) }}</span>
         {%- endif -%}
       </li>
       {%- endif %}
