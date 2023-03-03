@@ -5,7 +5,6 @@ import os
 import re
 import shutil  # which, copyfile, rmtree
 import subprocess as shell  # run, DEVNULL
-from weakref import ref
 from typing import TYPE_CHECKING, List, Tuple, Generator
 if TYPE_CHECKING:
     from lektor.builder import Artifact, Builder, BuildState
@@ -192,7 +191,7 @@ class TexSources:
             except AttributeError:
                 refs = list()
                 builder.__tex_files = refs  # type: ignore[attr-defined]
-            refs.append(ref(record))
+            refs.append(record)
 
     @staticmethod
     def build(builder: 'Builder') -> None:
@@ -209,7 +208,7 @@ class TexSources:
             msg = f'PDF builder ({TEXER})'
             with Log.group(msg, builder):
                 for rec_ref in sources:
-                    builder.build(PdfSource(rec_ref()))
+                    builder.build(PdfSource(rec_ref))
 
 
 # ----------------------------------------------------

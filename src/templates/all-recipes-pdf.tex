@@ -23,7 +23,7 @@
 {# recipe title (start on new page) #}
 \newrecipe{ {{- recipe._slug -}} }{ {{- recipe.name | latexStr -}} }
 {# duration & yield subtitle -#}
-\meta{ {{- recipe.time | asDuration(this.alt) -}} }{ {{- recipe.yield or '' -}} }
+\meta{ {{- recipe.time | asDuration(this.alt) -}} }{ {{- recipe.yield or '' | latexStr -}} }
 {# add source link on page footer -#}
 \footer{ {{- recipe.source.url | latexStr -}} }{ {{- recipe.source.host | latexStr -}} }
 
@@ -33,16 +33,16 @@
 
 {%- for ing in recipe.ingredients %}
 	{%- if ing.isGroup %}
-\ingGroup{ {{- ing.name -}} }
+\ingGroup{ {{- ing.name | latexStr -}} }
 	{%- else %}
 \item[
-		{%- if ing.quantity %}{{ ing.quantity }}{% endif -%}
+		{%- if ing.quantity %}{{ ing.quantity | latexStr }}{% endif -%}
 		{%- if ing.quantity and ing.unit %}~{% endif -%}
-		{%- if ing.unit %}{{ ing.unit }}{% endif -%}
-] \ingName{ {{- ing.name or '' -}} }
+		{%- if ing.unit %}{{ ing.unit | latexStr }}{% endif -%}
+] \ingName{ {{- ing.name or '' | latexStr -}} }
 		{%- if ing.note -%}
 \ingDetail{
-		{%- for word in ing.note.split() -%}
+		{%- for word in (ing.note | latexStr).split() -%}
 			{#- detect recipe reference links -#}
 			{%- if word.startswith('@') %} \pagelink{ {{- word[4:].rstrip('/') -}} }
 			{#- or copy unchanged -#}
