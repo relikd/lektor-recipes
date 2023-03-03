@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from lektor.build_programs import BuildProgram  # subclass
-from lektor.reporter import reporter  # build, verbosity
 from lektor.sourceobj import VirtualSourceObject  # subclass
-import click
 import os
 import re
 import shutil  # which, copyfile, rmtree
@@ -13,6 +11,7 @@ if TYPE_CHECKING:
     from lektor.builder import Artifact, Builder, BuildState
     from lektor.db import Record
     from lektor.environment import Environment
+from .log import Log
 from .utils import lookup_template_path
 
 VPATH = 'LatexPDF'
@@ -169,18 +168,6 @@ def raw_text_to_tex(text: str) -> str:
 
 
 # ----------------------------------------------------
-#  Helper methods
-# ----------------------------------------------------
-
-def _report_updated(msg: str) -> None:
-    click.echo('{} {}'.format(click.style('U', fg='green'), msg))
-
-
-def _report_error(msg: str) -> None:
-    click.echo('{} {}'.format(click.style('E', fg='red'), msg))
-
-
-# ----------------------------------------------------
 #  PDF Build Program & Source
 # ----------------------------------------------------
 
@@ -220,7 +207,7 @@ class TexSources:
 
         if sources:
             msg = f'PDF builder ({TEXER})'
-            with reporter.build(msg, builder):  # type: ignore[attr-defined]
+            with Log.group(msg, builder):
                 for rec_ref in sources:
                     builder.build(PdfSource(rec_ref()))
 
@@ -259,7 +246,7 @@ class PdfSource(VirtualSourceObject):
     def build(self, build_state: 'BuildState') -> None:
         cmd_tex = shutil.which(TEXER)
         if not cmd_tex:
-            _report_error(f'Skip PDF export. {TEXER} not found.')
+            Log.error(f'Skip PDF export. {TEXER} not found.')
             return
 
         # filename / path variables
@@ -278,10 +265,9 @@ class PdfSource(VirtualSourceObject):
             fp.write('\\def\\buildDir{' + build_dir + '}')
 
         # run lualatex
-        silent = reporter.verbosity == 0  # type: ignore[attr-defined]
         for i in range(1, 3):
             if i > 1:
-                _report_updated(self.url_path.lstrip('/') + f' [{i}/2]')
+                Log.updated(self.url_path.lstrip('/') + f' [{i}/2]')
             p = shell.run([
                 cmd_tex,  # lualatex
                 '--halt-on-error',
@@ -289,13 +275,13 @@ class PdfSource(VirtualSourceObject):
                 tex_src  # tex file
             ],
                 cwd=tex_root,  # change work dir so lualatex can find setup.tex
-                stdout=shell.DEVNULL if silent else None,  # dont spam console
+                stdout=None if Log.isVerbose() else shell.DEVNULL,
                 input=b'')  # auto-reply to stdin on error
 
             if p.returncode == 0:
                 shutil.copyfile(pdf_src, pdf_dest)
             else:
-                _report_error(f'{TEXER} returned error code {p.returncode}')
+                Log.error(f'{TEXER} returned error code {p.returncode}')
                 break
 
         # cleanup
