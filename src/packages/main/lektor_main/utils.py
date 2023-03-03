@@ -124,5 +124,8 @@ def retina_thumbnail(
     if not w and not h:
         return image, ew, eh
     else:
+        if not w or not h and mode == 'crop':
+            w = w or image.width
+            h = h or image.height
         img = image.thumbnail(width=w, height=h, mode=mode, upscale=False)
         return img, ew, eh
