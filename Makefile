@@ -17,7 +17,7 @@ help:
 	@echo '  server  - Start lektor server with live change updates'
 	@echo '  build   - Build deployable website into ./bin (incl. PDF)'
 	@echo '  deploy  - Custom rsync command to sync ./bin to remote server'
-	@echo '  pdf     - Generate PDF from tex (not needed if `make build`)'
+	@echo '  pdf     - Generate PDF from tex'
 	@echo
 	@echo '  find-links - Search for cross reference between recipes'
 	@echo '  find-yield - Print unique `yield:` attribute values'
