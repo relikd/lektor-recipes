@@ -2,12 +2,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=0.75">
-  <script type="text/javascript" src="{{ '/static/script.js'|url }}"></script>
-  <link rel="stylesheet" href="{{ '/static/style.css'|url }}">
-  <link rel="icon" sizes="32x32" href="{{ '/img/icon-32.png'|url }}">
-  <link rel="icon" sizes="196x196" href="{{ '/img/icon-196.png'|url }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/img/icon-180.png'|url }}">
-  <link rel="manifest" href="{{ '/app.webmanifest'|asseturl }}">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon/16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="mask-icon" href="/icon/safari-pinned-tab.svg" color="#EAE9E7">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+  <link rel="stylesheet" href="/style.css">
+  <script type="text/javascript" src="/script.js"></script>
   <title>{% block title %}Welcome{% endblock %} · recipe lekture</title>
 </head>
 <body> {#- ontouchstart="" #}
@@ -51,7 +54,7 @@
         but then this will create a dependency on all recipes
         -#}
         <a href="{{ '/'|url + 'recipes.pdf' }}" download="recipes-{{ this.alt }}.pdf" title="{{ bag('i18n+' + this.alt, 'other.get_pdf') }}">{#--#}
-          <img class="h1em" alt="(PDF)" height="20" src="{{ '/img/icon-pdf.svg'|url }}">{#--#}
+          <img class="h1em" alt="(PDF)" height="20" src="/img/icon-pdf.svg">{#--#}
         </a>
         {%- set url_without_alt = ('.'|url(absolute=True))[4:] -%}
         {%- if this.alt == 'de' -%}
